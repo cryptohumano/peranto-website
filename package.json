@@ -1,0 +1,28 @@
+{
+  "name": "landing-peranto",
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "predev": "node scripts/check-node.mjs",
+    "prebuild": "node scripts/check-node.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "serve dist -s -l tcp://0.0.0.0:${PORT:-4321}",
+    "astro": "astro",
+    "plausible:up": "docker compose -f plausible/compose.yml --project-directory plausible up -d",
+    "plausible:down": "docker compose -f plausible/compose.yml --project-directory plausible down",
+    "plausible:logs": "docker compose -f plausible/compose.yml --project-directory plausible logs -f plausible"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.3",
+    "serve": "^14.2.6",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^4.3.0"
+  }
+}

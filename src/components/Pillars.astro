@@ -1,0 +1,44 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang, UIKey } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const pillars: { title: UIKey; desc: UIKey }[] = [
+  { title: 'pillars.ssi.title', desc: 'pillars.ssi.desc' },
+  { title: 'pillars.infra.title', desc: 'pillars.infra.desc' },
+  { title: 'pillars.zkp.title', desc: 'pillars.zkp.desc' },
+  { title: 'pillars.gov.title', desc: 'pillars.gov.desc' },
+  { title: 'pillars.token.title', desc: 'pillars.token.desc' },
+  { title: 'pillars.circular.title', desc: 'pillars.circular.desc' },
+];
+---
+
+<section id="pilares" class="border-b border-line bg-paper-dark/50 py-20 sm:py-28">
+  <div class="section-width">
+    <SectionLabel label={t('pillars.label')} />
+    <h2 class="mb-12 font-display text-3xl font-medium text-ink sm:text-4xl">
+      {t('pillars.title')}
+    </h2>
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        pillars.map((pillar) => (
+          <li class="group rounded-lg border border-line bg-paper p-6 transition hover:border-deep/30 hover:shadow-sm">
+            <h3 class="font-display text-xl font-medium text-ink">
+              {t(pillar.title)}
+            </h3>
+            <p class="mt-3 text-base leading-relaxed text-ink-muted">
+              {t(pillar.desc)}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,130 @@
+---
+import PaymentSovereignty from './PaymentSovereignty.astro';
+import ProjectResearchPanel from './ProjectResearchPanel.astro';
+import ResearchProjectBody from './ResearchProjectBody.astro';
+import SectionLabel from './SectionLabel.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import {
+  groupedProjects,
+  researchProjects,
+  showcaseProjects,
+  type ResearchProject,
+} from '../config/research-projects';
+import { fetchLabPostsByProject, labTagUrl } from '../lib/ghost';
+import type { ProjectStatus } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const labPostsByTag = await fetchLabPostsByProject();
+const featured = researchProjects.find((p) => p.featured);
+const showcases = showcaseProjects();
+const groups = groupedProjects(true);
+
+function statusLabel(status: ProjectStatus) {
+  if (status === 'live') return t('research.status.live');
+  if (status === 'poc') return t('research.status.poc');
+  return t('research.status.experiment');
+}
+
+function labForProject(project: ResearchProject) {
+  const tag = project.ghostTag;
+  if (!tag) return { url: null, count: 0 };
+  const posts = labPostsByTag[tag] ?? [];
+  return {
+    url: posts.length > 0 ? labTagUrl(tag) : null,
+    count: posts.length,
+  };
+}
+---
+
+<section id="investigacion" class="border-b border-line py-20 sm:py-28">
+  <div class="section-width">
+    <SectionLabel label={t('research.label')} />
+    <h2 class="mb-4 font-display text-3xl font-medium text-ink sm:text-4xl">
+      {t('research.title')}
+    </h2>
+    <p class="mb-4 max-w-2xl text-lg text-ink-muted">{t('research.intro')}</p>
+    <p class="mb-8 max-w-2xl text-base leading-relaxed text-ink-muted">
+      {t('research.solidarity')}
+    </p>
+
+    <PaymentSovereignty lang={lang} />
+
+    <div class="project-panels space-y-4">
+      {
+        featured && (
+          <ProjectResearchPanel
+            lang={lang}
+            project={featured}
+            variant="featured"
+            defaultOpen={featured.defaultOpen ?? true}
+            statusLabel={statusLabel(featured.status)}
+            labUrl={labForProject(featured).url}
+            labPostCount={labForProject(featured).count}
+          >
+            <ResearchProjectBody
+              lang={lang}
+              project={featured}
+              labUrl={labForProject(featured).url}
+            />
+          </ProjectResearchPanel>
+        )
+      }
+
+      {
+        showcases.map((project) => {
+          const lab = labForProject(project);
+          return (
+            <ProjectResearchPanel
+              lang={lang}
+              project={project}
+              variant="showcase"
+              defaultOpen={project.defaultOpen ?? false}
+              statusLabel={statusLabel(project.status)}
+              labUrl={lab.url}
+              labPostCount={lab.count}
+            >
+              <ResearchProjectBody lang={lang} project={project} labUrl={lab.url} />
+            </ProjectResearchPanel>
+          );
+        })
+      }
+
+      {
+        groups.map((group) => (
+          <div class="pt-4">
+            <h3 class="mb-4 font-mono text-xs font-medium uppercase tracking-[0.18em] text-deep">
+              {t(group.labelKey)}
+            </h3>
+            <div class="space-y-3">
+              {
+                group.projects.map((project) => {
+                  const lab = labForProject(project);
+                  return (
+                    <ProjectResearchPanel
+                      lang={lang}
+                      project={project}
+                      variant="compact"
+                      defaultOpen={project.defaultOpen ?? false}
+                      statusLabel={statusLabel(project.status)}
+                      labUrl={lab.url}
+                      labPostCount={lab.count}
+                    >
+                      <ResearchProjectBody lang={lang} project={project} labUrl={lab.url} />
+                    </ProjectResearchPanel>
+                  );
+                })
+              }
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

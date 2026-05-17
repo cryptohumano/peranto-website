@@ -1,0 +1,36 @@
+---
+import { getAnalyticsConfig } from '../lib/analytics';
+
+const config = getAnalyticsConfig();
+---
+
+{
+  config?.provider === 'plausible' && (
+    <script
+      defer
+      data-domain={config.domain}
+      src={config.scriptUrl}></script>
+  )
+}
+
+{
+  config?.provider === 'umami' && (
+    <script
+      defer
+      src={config.scriptUrl}
+      data-website-id={config.websiteId}></script>
+  )
+}
+
+{
+  config && (
+    <script>
+      import {
+        initAnalyticsClickTracking,
+        initProjectPanelTracking,
+      } from '../scripts/analytics-events';
+      initAnalyticsClickTracking();
+      initProjectPanelTracking();
+    </script>
+  )
+}

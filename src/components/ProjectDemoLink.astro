@@ -1,0 +1,32 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import type { ResearchProject } from '../config/research-projects';
+
+interface Props {
+  lang: Lang;
+  project: ResearchProject;
+}
+
+const { project } = Astro.props;
+const t = useTranslations(Astro.props.lang);
+
+const isDemo =
+  project.href.startsWith('https://') && !project.href.includes('github.com');
+---
+
+{
+  isDemo && (
+    <a
+      href={project.href}
+      class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-track-event="CTA Demo"
+      data-track-project={project.id}
+      data-track-placement="investigacion"
+    >
+      {t('research.link.demo')}
+    </a>
+  )
+}

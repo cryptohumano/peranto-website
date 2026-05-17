@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import { heroFaces } from '../config/faces';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+const t = useTranslations(lang);
+const count = heroFaces.length;
+---
+
+<div
+  class:list={['hero-faces', className]}
+  style={`--face-count: ${count}`}
+>
+  <div class="hero-faces__aura" aria-hidden="true"></div>
+  <div class="hero-faces__luma" aria-hidden="true"></div>
+
+  <div class="hero-faces__stage" aria-live="polite">
+    <div class="hero-faces__stage-glow" aria-hidden="true"></div>
+    <div class="hero-faces__stage-idle" aria-hidden="true">
+      <span class="hero-faces__core-dot"></span>
+    </div>
+    {
+      heroFaces.map((src, index) => (
+        <Image
+          src={src}
+          alt=""
+          width={240}
+          height={240}
+          class="hero-faces__stage-img"
+          data-index={index}
+          loading={index === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      ))
+    }
+  </div>
+
+  <ol class="hero-faces__ring">
+    {
+      heroFaces.map((src, index) => (
+        <li class="hero-faces__slot" style={`--index: ${index}`}>
+          <div class="hero-faces__upright">
+            <div class="hero-faces__float">
+              <button
+                type="button"
+                class="hero-faces__trigger"
+                data-index={index}
+                aria-label={t('hero.faces.aria')}
+              >
+                <span class="hero-faces__ring-pulse" aria-hidden="true"></span>
+                <Image
+                  src={src}
+                  alt=""
+                  width={112}
+                  height={112}
+                  class="hero-faces__img"
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </button>
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+
+  <svg class="hero-faces__orbit-line" viewBox="0 0 320 320" fill="none" aria-hidden="true">
+    <circle cx="160" cy="160" r="95" class="hero-faces__orbit-stroke" />
+  </svg>
+</div>
+
+<script>
+  function initHeroFaces() {
+    const root = document.querySelector('.hero-faces');
+    if (!root) return;
+
+    const triggers = root.querySelectorAll('.hero-faces__trigger');
+    const stageImages = root.querySelectorAll('.hero-faces__stage-img');
+
+    const setActive = (index) => {
+      if (index === null) {
+        root.classList.remove('is-active');
+        root.removeAttribute('data-active');
+        stageImages.forEach((img) => img.classList.remove('is-visible'));
+        return;
+      }
+
+      root.classList.add('is-active');
+      root.dataset.active = String(index);
+      stageImages.forEach((img, i) => {
+        img.classList.toggle('is-visible', i === index);
+      });
+    };
+
+    triggers.forEach((btn, index) => {
+      btn.addEventListener('mouseenter', () => setActive(index));
+      btn.addEventListener('focus', () => setActive(index));
+      btn.addEventListener('click', () => {
+        setActive(root.dataset.active === String(index) ? null : index);
+      });
+    });
+
+    root.addEventListener('mouseleave', () => setActive(null));
+    root.addEventListener(
+      'focusout',
+      (event) => {
+        const next = event.relatedTarget;
+        if (!next || !root.contains(next)) setActive(null);
+      },
+      true,
+    );
+  }
+
+  initHeroFaces();
+  document.addEventListener('astro:page-load', initHeroFaces);
+</script>

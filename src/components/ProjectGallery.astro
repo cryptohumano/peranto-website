@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang, UIKey } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import type { ProjectScreenshot } from '../config/screenshot-types';
+
+interface Props {
+  lang: Lang;
+  galleryId: string;
+  screenshots: ProjectScreenshot[];
+  labelKey: UIKey;
+  dialogKey: UIKey;
+  expandKey: UIKey;
+  closeKey: UIKey;
+  prevKey: UIKey;
+  nextKey: UIKey;
+  class?: string;
+}
+
+const {
+  lang,
+  galleryId,
+  screenshots,
+  labelKey,
+  dialogKey,
+  expandKey,
+  closeKey,
+  prevKey,
+  nextKey,
+  class: className,
+} = Astro.props;
+const t = useTranslations(lang);
+const hint =
+  lang === 'es' ? 'Haz clic en una captura para ampliarla.' : 'Click any screenshot to enlarge it.';
+---
+
+<figure
+  class:list={['criteria-gallery', className]}
+  data-project-gallery={galleryId}
+>
+  <figcaption class="mb-4 font-mono text-xs uppercase tracking-[0.15em] text-ink-faint">
+    {t(labelKey)}
+    <span class="mt-1 block font-sans normal-case tracking-normal text-ink-muted">{hint}</span>
+  </figcaption>
+
+  <ul class="criteria-gallery__grid">
+    {
+      screenshots.map((shot, index) => (
+        <li
+          class:list={[
+            'criteria-gallery__item',
+            { 'criteria-gallery__item--featured': shot.featured },
+          ]}
+        >
+          <button
+            type="button"
+            class="criteria-gallery__trigger group w-full text-left"
+            data-gallery-open
+            data-index={index}
+            aria-label={`${t(expandKey)}: ${t(shot.captionKey)}`}
+          >
+            <span class="criteria-gallery__frame relative block overflow-hidden bg-night-elevated">
+              <Image
+                src={shot.src}
+                alt={t(shot.captionKey)}
+                widths={shot.featured ? [640, 960, 1280] : [320, 480, 640]}
+                sizes={
+                  shot.featured
+                    ? '(max-width: 1024px) 100vw, 56rem'
+                    : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20rem'
+                }
+                class:list={[
+                  'criteria-gallery__img w-full transition duration-300 group-hover:scale-[1.02]',
+                  shot.featured
+                    ? 'max-h-[min(42vh,14rem)] object-contain object-top sm:max-h-[min(70vh,28rem)] sm:object-cover'
+                    : 'aspect-[4/3] object-contain object-top sm:object-cover',
+                ]}
+                loading={index < 2 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+              <span
+                class="pointer-events-none absolute inset-0 flex items-center justify-center bg-night/0 opacity-0 transition group-hover:bg-night/25 group-hover:opacity-100 group-focus-visible:bg-night/25 group-focus-visible:opacity-100"
+                aria-hidden="true"
+              >
+                <span class="rounded-full bg-paper/95 px-3 py-1.5 text-xs font-medium text-ink shadow">
+                  {t(expandKey)}
+                </span>
+              </span>
+            </span>
+          </button>
+          <p class="border-t border-line px-3 py-2 text-xs leading-relaxed text-ink-muted sm:text-sm">
+            {t(shot.captionKey)}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="criteria-lightbox" aria-label={t(dialogKey)}>
+    <div class="criteria-lightbox__inner">
+      <button
+        type="button"
+        class="criteria-lightbox__close"
+        data-lightbox-close
+        aria-label={t(closeKey)}
+      >
+        ×
+      </button>
+
+      <button
+        type="button"
+        class="criteria-lightbox__nav criteria-lightbox__nav--prev"
+        data-lightbox-prev
+        aria-label={t(prevKey)}
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        class="criteria-lightbox__nav criteria-lightbox__nav--next"
+        data-lightbox-next
+        aria-label={t(nextKey)}
+      >
+        ›
+      </button>
+
+      <div class="criteria-lightbox__slides">
+        {
+          screenshots.map((shot, index) => (
+            <figure class="criteria-lightbox__slide" data-slide={index} hidden>
+              <div class="criteria-lightbox__media">
+                <Image
+                  src={shot.src}
+                  alt={t(shot.captionKey)}
+                  widths={[640, 960, 1280, 1600]}
+                  sizes="100vw"
+                  class="criteria-lightbox__img"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="criteria-lightbox__caption">{t(shot.captionKey)}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+
+      <p
+        class="criteria-lightbox__counter mt-2 text-center font-mono text-xs text-white/50"
+        data-lightbox-counter
+      />
+    </div>
+  </dialog>
+</figure>
+
+<script>
+  function initProjectGalleries() {
+    document.querySelectorAll('[data-project-gallery]').forEach((root) => {
+      if (!(root instanceof HTMLElement) || root.dataset.galleryReady === 'true') return;
+      root.dataset.galleryReady = 'true';
+
+      const dialog = root.querySelector('.criteria-lightbox');
+      if (!(dialog instanceof HTMLDialogElement)) return;
+
+      const slides = [...root.querySelectorAll('.criteria-lightbox__slide')];
+      const counter = root.querySelector('[data-lightbox-counter]');
+      const openButtons = root.querySelectorAll('[data-gallery-open]');
+      const closeBtn = root.querySelector('[data-lightbox-close]');
+      const prevBtn = root.querySelector('[data-lightbox-prev]');
+      const nextBtn = root.querySelector('[data-lightbox-next]');
+
+      let current = 0;
+
+      const show = (index: number) => {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+          (slide as HTMLElement).hidden = i !== current;
+        });
+        if (counter) {
+          counter.textContent = `${current + 1} / ${slides.length}`;
+        }
+      };
+
+      const open = (index: number) => {
+        show(index);
+        dialog.showModal();
+        document.body.style.overflow = 'hidden';
+      };
+
+      const close = () => {
+        dialog.close();
+        document.body.style.overflow = '';
+      };
+
+      openButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const index = Number(btn.getAttribute('data-index'));
+          if (!Number.isNaN(index)) open(index);
+        });
+      });
+
+      closeBtn?.addEventListener('click', close);
+      prevBtn?.addEventListener('click', () => show(current - 1));
+      nextBtn?.addEventListener('click', () => show(current + 1));
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) close();
+      });
+
+      dialog.addEventListener('close', () => {
+        document.body.style.overflow = '';
+      });
+
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          show(current - 1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          show(current + 1);
+        }
+      });
+    });
+  }
+
+  initProjectGalleries();
+  document.addEventListener('astro:page-load', initProjectGalleries);
+</script>

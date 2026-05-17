@@ -1,0 +1,61 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+const t = useTranslations(lang);
+
+const items = [
+  {
+    title: 'research.payments.architecture.title',
+    body: 'research.payments.architecture.body',
+  },
+  {
+    title: 'research.payments.bridge.title',
+    body: 'research.payments.bridge.body',
+  },
+  {
+    title: 'research.payments.direction.title',
+    body: 'research.payments.direction.body',
+  },
+] as const;
+---
+
+<aside
+  class:list={[
+    'mb-12 rounded-xl border border-deep/15 bg-night/5 p-6 sm:p-8',
+    className,
+  ]}
+  aria-labelledby="payments-narrative-title"
+>
+  <p class="mb-2 font-mono text-xs font-medium uppercase tracking-[0.18em] text-deep">
+    {t('research.payments.label')}
+  </p>
+  <h3 id="payments-narrative-title" class="font-display text-xl font-medium text-ink sm:text-2xl">
+    {t('research.payments.title')}
+  </h3>
+  <p class="mt-3 max-w-3xl text-base leading-relaxed text-ink-muted">
+    {t('research.payments.lead')}
+  </p>
+
+  <ol class="mt-8 grid gap-6 sm:grid-cols-3">
+    {
+      items.map((item, index) => (
+        <li class="border-t border-line/80 pt-5 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6 first:sm:border-l-0 first:sm:pl-0">
+          <span class="font-mono text-xs text-bright" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h4 class="mt-2 font-display text-base font-medium text-ink">
+            {t(item.title)}
+          </h4>
+          <p class="mt-2 text-sm leading-relaxed text-ink-muted">{t(item.body)}</p>
+        </li>
+      ))
+    }
+  </ol>
+</aside>

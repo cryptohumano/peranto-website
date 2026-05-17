@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { projectPreviewImages } from '../config/project-previews';
+import type { ResearchProject } from '../config/research-projects';
+import type { ProjectStatus } from '../config/site';
+
+export type PanelVariant = 'featured' | 'showcase' | 'compact';
+
+interface Props {
+  lang: Lang;
+  project: ResearchProject;
+  variant?: PanelVariant;
+  defaultOpen?: boolean;
+  labUrl?: string | null;
+  labPostCount?: number;
+  statusLabel: string;
+  class?: string;
+}
+
+const {
+  lang,
+  project,
+  variant = 'compact',
+  defaultOpen = false,
+  labUrl = null,
+  labPostCount = 0,
+  statusLabel,
+  class: className,
+} = Astro.props;
+
+const t = useTranslations(lang);
+const title = t(project.titleKey);
+const description = t(project.descKey);
+const preview = projectPreviewImages[project.id];
+const isFeatured = variant === 'featured';
+const isShowcase = variant === 'showcase';
+const summaryLine =
+  description.length > 160 ? `${description.slice(0, 157).trimEnd()}…` : description;
+---
+
+<details
+  id={`proyecto-${project.id}`}
+  class:list={[
+    'project-panel',
+    isFeatured && 'project-panel--featured',
+    isShowcase && 'project-panel--showcase',
+    variant === 'compact' && 'project-panel--compact',
+    className,
+  ]}
+  open={defaultOpen}
+  data-project-panel
+  data-track-project={project.id}
+  data-track-variant={variant}
+>
+  <summary class="project-panel__summary">
+    <span class="project-panel__summary-main">
+      {
+        preview && (
+          <span class="project-panel__thumb" aria-hidden="true">
+            <Image
+              src={preview}
+              alt=""
+              width={isFeatured || isShowcase ? 112 : 72}
+              height={isFeatured || isShowcase ? 72 : 48}
+              class="project-panel__thumb-img"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+        )
+      }
+      <span class="project-panel__summary-text">
+        <span class="project-panel__meta">
+          <span class:list={['project-panel__status', isFeatured && 'project-panel__status--live']}>
+            {statusLabel}
+          </span>
+          {
+            project.href.startsWith('https://') && !project.href.includes('github.com') && (
+              <span class="project-panel__hostname">
+                {new URL(project.href).hostname}
+              </span>
+            )
+          }
+        </span>
+        <span class="project-panel__title">{title}</span>
+        <span class="project-panel__teaser">{summaryLine}</span>
+      </span>
+    </span>
+
+    <span class="project-panel__summary-actions">
+      {
+        labUrl && labPostCount > 0 && (
+          <span class="project-panel__lab-pill">
+            {t('research.projects.lab')}
+            <span class="project-panel__lab-count">{labPostCount}</span>
+          </span>
+        )
+      }
+      <span class="project-panel__chevron" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M5 7.5L10 12.5L15 7.5"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </span>
+    </span>
+  </summary>
+
+  <div class="project-panel__body">
+    <slot />
+  </div>
+</details>

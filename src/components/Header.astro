@@ -1,0 +1,78 @@
+---
+import logoFull from '../assets/logo-full.png';
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n/ui';
+import { getAlternateLang, pathForLang, useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const altLang = getAlternateLang(lang);
+
+const nav = [
+  { href: '#tesis', label: t('nav.thesis') },
+  { href: '#pilares', label: t('nav.pillars') },
+  { href: '#investigacion', label: t('nav.research') },
+  { href: '#principios', label: t('nav.principles') },
+  { href: '#explorar', label: t('nav.explore') },
+  { href: '#colaborar', label: t('nav.collaborate') },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-night/95 backdrop-blur-md">
+  <div class="section-width flex h-16 items-center justify-between gap-6 sm:h-[4.5rem]">
+    <a href={pathForLang(lang)} class="shrink-0" aria-label="Peranto">
+      <Image
+        src={logoFull}
+        alt="Peranto"
+        width={140}
+        height={36}
+        class="h-8 w-auto sm:h-9"
+        loading="eager"
+      />
+    </a>
+
+    <nav class="hidden items-center gap-6 lg:flex" aria-label="Principal">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="text-sm text-white/70 transition-colors hover:text-white"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3 sm:gap-4">
+      <a
+        href={pathForLang(altLang)}
+        class="text-sm font-medium text-white/60 transition-colors hover:text-white"
+        hreflang={altLang}
+      >
+        {t('lang.switch')}
+      </a>
+      <a
+        href={siteConfig.ghostUrl}
+        class="hidden text-sm text-white/70 transition-colors hover:text-white sm:inline"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('nav.lab')}
+      </a>
+      <a
+        href={siteConfig.githubOrg}
+        class="rounded-md border border-white/20 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:border-bright/50 hover:bg-white/5"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('nav.github')}
+      </a>
+    </div>
+  </div>
+</header>

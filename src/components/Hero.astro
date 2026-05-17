@@ -1,0 +1,75 @@
+---
+import HeroFaces from './HeroFaces.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="relative border-b border-line bg-night text-white">
+  <div
+    class="pointer-events-none absolute inset-0 opacity-40"
+    aria-hidden="true"
+    style="background: radial-gradient(ellipse 80% 60% at 70% 20%, #1a5b92 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 20% 80%, #3da1bc 0%, transparent 50%);"
+  />
+
+  <div class="section-width relative grid gap-8 py-10 sm:gap-12 sm:py-16 lg:grid-cols-[1fr_18rem] lg:items-center lg:gap-12 lg:py-24">
+    <div class="order-2 lg:order-1 lg:pt-2">
+      <p class="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-bright/90">
+        {t('hero.eyebrow')}
+      </p>
+      <h1
+        class="font-display text-balance text-4xl font-medium leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.25rem]"
+      >
+        {t('hero.title')}
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
+        {t('hero.subtitle')}
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href={siteConfig.ghostUrl}
+          class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-deep/20 transition hover:brightness-110"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-track-event="CTA Lab"
+          data-track-placement="hero"
+        >
+          {t('hero.cta.lab')}
+        </a>
+        <a
+          href="https://criteria.peranto.app"
+          class="inline-flex items-center rounded-md border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/50 hover:bg-white/5"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-track-event="CTA Criteria"
+          data-track-placement="hero"
+        >
+          {t('hero.cta.criteria')}
+        </a>
+        <a
+          href={siteConfig.githubOrg}
+          class="inline-flex items-center rounded-md border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/50 hover:bg-white/5"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-track-event="CTA GitHub"
+          data-track-placement="hero"
+        >
+          {t('hero.cta.github')}
+        </a>
+      </div>
+    </div>
+
+    <div class="order-1 flex justify-center overflow-visible pb-2 pt-1 sm:order-2 sm:py-0 lg:justify-center">
+      <div class="hero__constellation shrink-0">
+        <HeroFaces lang={lang} />
+      </div>
+    </div>
+  </div>
+</section>

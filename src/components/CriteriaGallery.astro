@@ -1,0 +1,25 @@
+---
+import ProjectGallery from './ProjectGallery.astro';
+import type { Lang } from '../i18n/ui';
+import { criteriaScreenshots } from '../config/criteria-screenshots';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+---
+
+<ProjectGallery
+  lang={lang}
+  galleryId="criteria"
+  screenshots={criteriaScreenshots}
+  labelKey="research.projects.criteria.gallery.label"
+  dialogKey="research.projects.criteria.gallery.dialog"
+  expandKey="research.projects.criteria.gallery.expand"
+  closeKey="research.projects.criteria.gallery.close"
+  prevKey="research.projects.criteria.gallery.prev"
+  nextKey="research.projects.criteria.gallery.next"
+  class={className}
+/>

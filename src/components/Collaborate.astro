@@ -1,0 +1,128 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang, UIKey } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const criteriaUrl = 'https://criteria.peranto.app';
+
+const mailSubject = (topic: 'research' | 'support') => {
+  const subjects =
+    lang === 'es'
+      ? {
+          research: 'Peranto — colaboración en investigación',
+          support: 'Peranto — apoyo o financiamiento',
+        }
+      : {
+          research: 'Peranto — research collaboration',
+          support: 'Peranto — funding or patronage',
+        };
+  return subjects[topic];
+};
+
+type PathCard = {
+  titleKey: UIKey;
+  descKey: UIKey;
+  ctaKey: UIKey;
+  href: string;
+  external?: boolean;
+  secondaryKey: UIKey;
+  secondaryHref: string;
+  secondaryExternal?: boolean;
+  trackPrimary: string;
+  trackSecondary: string;
+};
+
+const paths: PathCard[] = [
+  {
+    titleKey: 'collaborate.path.use.title',
+    descKey: 'collaborate.path.use.desc',
+    ctaKey: 'collaborate.path.use.cta',
+    href: criteriaUrl,
+    external: true,
+    secondaryKey: 'collaborate.path.use.secondary',
+    secondaryHref: '#investigacion',
+    trackPrimary: 'CTA Collaborate Use',
+    trackSecondary: 'CTA Collaborate Use Secondary',
+  },
+  {
+    titleKey: 'collaborate.path.research.title',
+    descKey: 'collaborate.path.research.desc',
+    ctaKey: 'collaborate.path.research.cta',
+    href: '#investigacion',
+    secondaryKey: 'collaborate.path.research.secondary',
+    secondaryHref: `mailto:${siteConfig.email}?subject=${encodeURIComponent(mailSubject('research'))}`,
+    trackPrimary: 'CTA Collaborate Research',
+    trackSecondary: 'CTA Collaborate Research Email',
+  },
+  {
+    titleKey: 'collaborate.path.support.title',
+    descKey: 'collaborate.path.support.desc',
+    ctaKey: 'collaborate.path.support.cta',
+    href: `mailto:${siteConfig.email}?subject=${encodeURIComponent(mailSubject('support'))}`,
+    secondaryKey: 'collaborate.path.support.secondary',
+    secondaryHref: siteConfig.ghostUrl,
+    secondaryExternal: true,
+    trackPrimary: 'CTA Collaborate Support',
+    trackSecondary: 'CTA Collaborate Support Lab',
+  },
+];
+---
+
+<section id="colaborar" class="py-20 sm:py-28">
+  <div class="section-width">
+    <div class="rounded-2xl border border-line bg-gradient-to-br from-paper to-accent-soft/40 p-8 sm:p-12 lg:p-14">
+      <SectionLabel label={t('collaborate.label')} />
+      <h2 class="font-display text-3xl font-medium text-ink sm:text-4xl">
+        {t('collaborate.title')}
+      </h2>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-muted">
+        {t('collaborate.intro')}
+      </p>
+
+      <ul class="mt-10 grid gap-5 lg:grid-cols-3">
+        {
+          paths.map((path) => (
+            <li class="collaborate-path flex flex-col rounded-xl border border-line bg-paper p-6 shadow-sm">
+              <h3 class="font-display text-xl font-medium text-ink">{t(path.titleKey)}</h3>
+              <p class="mt-3 flex-1 text-base leading-relaxed text-ink-muted">{t(path.descKey)}</p>
+              <div class="mt-6 flex flex-col gap-3">
+                <a
+                  href={path.href}
+                  class="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-deep to-bright px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+                  target={path.external ? '_blank' : undefined}
+                  rel={path.external ? 'noopener noreferrer' : undefined}
+                  data-track-event={path.trackPrimary}
+                  data-track-placement="colaborar"
+                >
+                  {t(path.ctaKey)}
+                </a>
+                <a
+                  href={path.secondaryHref}
+                  class="text-center text-sm font-medium text-deep link-underline"
+                  target={path.secondaryExternal ? '_blank' : undefined}
+                  rel={path.secondaryExternal ? 'noopener noreferrer' : undefined}
+                  data-track-event={path.trackSecondary}
+                  data-track-placement="colaborar"
+                >
+                  {t(path.secondaryKey)}
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-10 max-w-2xl text-sm leading-relaxed text-ink-faint">
+        {t('collaborate.footer')}
+      </p>
+    </div>
+  </div>
+</section>

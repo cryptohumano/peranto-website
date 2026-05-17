@@ -1,0 +1,57 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+import { absoluteUrl, seoConfig } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+  canonical: URL;
+  title: string;
+  description: string;
+}
+
+const { lang, canonical, title, description } = Astro.props;
+const t = useTranslations(lang);
+const siteUrl = siteConfig.siteUrl;
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${siteUrl}/#organization`,
+  name: seoConfig.siteName,
+  url: siteUrl,
+  email: siteConfig.email,
+  sameAs: [siteConfig.githubOrg],
+  description: t('meta.description'),
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  url: siteUrl,
+  name: seoConfig.siteName,
+  description,
+  inLanguage: [lang === 'es' ? 'es' : 'en'],
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+const webPage = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${canonical.href}#webpage`,
+  url: canonical.href,
+  name: title,
+  description,
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  inLanguage: lang === 'es' ? 'es-MX' : 'en-US',
+};
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [organization, website, webPage],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(graph)} />

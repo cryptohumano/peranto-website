@@ -1,0 +1,82 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+import { fetchLatestPosts, type GhostPost } from '../lib/ghost';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const posts: GhostPost[] | null = await fetchLatestPosts(3);
+---
+
+<section id="explorar" class="border-b border-line py-20 sm:py-28">
+  <div class="section-width">
+    <SectionLabel label={t('explore.label')} />
+    <div class="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h2 class="font-display text-3xl font-medium text-ink sm:text-4xl">
+          {t('explore.title')}
+        </h2>
+        <p class="mt-4 max-w-xl text-lg text-ink-muted">{t('explore.intro')}</p>
+      </div>
+      <a
+        href={siteConfig.ghostUrl}
+        class="inline-flex shrink-0 items-center text-sm font-semibold text-deep link-underline"
+        target="_blank"
+        rel="noopener"
+        data-track-event="CTA Lab"
+        data-track-placement="explorar"
+      >
+        {t('explore.cta')} →
+      </a>
+    </div>
+
+    {
+      posts && posts.length > 0 ? (
+        <ul class="grid gap-6 sm:grid-cols-3">
+          {posts.map((post) => (
+            <li>
+              <a
+                href={`${siteConfig.ghostUrl}/${post.slug}/`}
+                class="group flex h-full flex-col rounded-lg border border-line bg-paper p-5 transition hover:border-deep/30 hover:shadow-sm"
+                target="_blank"
+                rel="noopener"
+                data-track-event="Lab Article"
+                data-track-slug={post.slug}
+                data-track-placement="explorar"
+              >
+                <time
+                  class="font-mono text-xs text-ink-faint"
+                  datetime={post.published_at}
+                >
+                  {new Date(post.published_at).toLocaleDateString(
+                    lang === 'es' ? 'es-MX' : 'en-US',
+                    { year: 'numeric', month: 'long', day: 'numeric' },
+                  )}
+                </time>
+                <h3 class="mt-3 font-display text-lg font-medium text-ink group-hover:text-deep">
+                  {post.title}
+                </h3>
+                <p class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink-muted">
+                  {post.excerpt}
+                </p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-lg border border-dashed border-line bg-paper-dark/30 px-8 py-12 text-center">
+          <p class="font-display text-lg text-ink">{t('explore.placeholder.title')}</p>
+          <p class="mx-auto mt-2 max-w-md text-sm text-ink-muted">
+            {t('explore.placeholder.desc')}
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  label: string;
+  tone?: 'light' | 'dark';
+}
+
+const { label, tone = 'light' } = Astro.props;
+---
+
+<p
+  class:list={[
+    'mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em]',
+    tone === 'dark' ? 'text-bright/90' : 'text-deep',
+  ]}
+>
+  {label}
+</p>

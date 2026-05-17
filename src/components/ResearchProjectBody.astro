@@ -1,0 +1,590 @@
+---
+import CriteriaGallery from './CriteriaGallery.astro';
+import ProjectDemoLink from './ProjectDemoLink.astro';
+import ProjectGallery from './ProjectGallery.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { criteriaFeatureKeys } from '../config/criteria-features';
+import { andinoScreenshots } from '../config/andino-screenshots';
+import { emergencyScreenshots } from '../config/emergency-screenshots';
+import { lumoFeatureKeys } from '../config/lumo-features';
+import { lumoScreenshots } from '../config/lumo-screenshots';
+import { yohualliScreenshots } from '../config/yohualli-screenshots';
+import type { ResearchProject } from '../config/research-projects';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  lang: Lang;
+  project: ResearchProject;
+  labUrl?: string | null;
+}
+
+const { lang, project, labUrl = null } = Astro.props;
+const t = useTranslations(lang);
+
+const isLiveApp =
+  project.status === 'live' &&
+  project.href.startsWith('https://') &&
+  !project.href.includes('github.com');
+
+function projectHref() {
+  return project.githubHref ?? project.href;
+}
+---
+
+{
+  project.id === 'criteria' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+
+      <div class="mt-8">
+        <h4 class="mb-4 font-mono text-xs font-medium uppercase tracking-[0.15em] text-deep">
+          {t('research.projects.criteria.features.label')}
+        </h4>
+        <ul class="grid gap-3 sm:grid-cols-2">
+          {
+            criteriaFeatureKeys.map((key) => (
+              <li class="flex gap-2 text-sm leading-relaxed text-ink-muted">
+                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-bright" aria-hidden="true" />
+                {t(key)}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <CriteriaGallery lang={lang} class="mt-10" />
+
+      <div class="mt-8 rounded-lg border border-line/80 bg-paper/80 p-5 sm:p-6">
+        <h4 class="font-display text-lg font-medium text-ink">
+          {t('research.projects.criteria.support.title')}
+        </h4>
+        <p class="mt-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+          {t('research.projects.criteria.support.body')}
+        </p>
+      </div>
+
+      <div class="project-panel__cta-row">
+        <a
+          href={project.href}
+          class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-track-event="CTA Criteria"
+          data-track-placement="investigacion"
+          data-track-project="criteria"
+        >
+          {t('research.projects.criteria.cta.visit')}
+        </a>
+        {
+          project.subscribeHref && (
+            <a
+              href={project.subscribeHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.projects.criteria.cta.support')}
+            </a>
+          )
+        }
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'lumo' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+
+      <div class="mt-8">
+        <h4 class="mb-4 font-mono text-xs font-medium uppercase tracking-[0.15em] text-deep">
+          {t('research.projects.lumo.features.label')}
+        </h4>
+        <ul class="grid gap-3 sm:grid-cols-2">
+          {
+            lumoFeatureKeys.map((key) => (
+              <li class="flex gap-2 text-sm leading-relaxed text-ink-muted">
+                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-bright" aria-hidden="true" />
+                {t(key)}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <ProjectGallery
+        lang={lang}
+        galleryId="lumo"
+        screenshots={lumoScreenshots}
+        labelKey="research.projects.lumo.gallery.label"
+        dialogKey="research.projects.lumo.gallery.dialog"
+        expandKey="research.projects.lumo.gallery.expand"
+        closeKey="research.projects.lumo.gallery.close"
+        prevKey="research.projects.lumo.gallery.prev"
+        nextKey="research.projects.lumo.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="mt-8 rounded-lg border border-line/80 bg-paper-dark/40 p-5 sm:p-6">
+        <h4 class="font-display text-lg font-medium text-ink">
+          {t('research.projects.lumo.adoption.title')}
+        </h4>
+        <p class="mt-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+          {t('research.projects.lumo.adoption.body')}
+        </p>
+      </div>
+
+      <div class="project-panel__cta-row">
+        <a
+          href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(lang === 'es' ? 'Lumo — consulta de adopción' : 'Lumo — adoption inquiry')}`}
+          class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+        >
+          {t('research.projects.lumo.cta.contact')}
+        </a>
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.projects.lumo.cta.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'aura' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.aura.base')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.aura.chains')}
+      </p>
+
+      <div class="project-panel__cta-row">
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={projectHref()}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'andino' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.andino.heritage')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.andino.proof')}
+      </p>
+
+      <ProjectGallery
+        lang={lang}
+        galleryId="andino"
+        screenshots={andinoScreenshots}
+        labelKey="research.projects.andino.gallery.label"
+        dialogKey="research.projects.andino.gallery.dialog"
+        expandKey="research.projects.andino.gallery.expand"
+        closeKey="research.projects.andino.gallery.close"
+        prevKey="research.projects.andino.gallery.prev"
+        nextKey="research.projects.andino.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="project-panel__cta-row">
+        <ProjectDemoLink lang={lang} project={project} />
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track-event="CTA GitHub"
+              data-track-project={project.id}
+              data-track-placement="investigacion"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'emergency' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.emergency.body')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.emergency.context')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.emergency.future')}
+      </p>
+
+      <ProjectGallery
+        lang={lang}
+        galleryId="emergency"
+        screenshots={emergencyScreenshots}
+        labelKey="research.projects.emergency.gallery.label"
+        dialogKey="research.projects.emergency.gallery.dialog"
+        expandKey="research.projects.emergency.gallery.expand"
+        closeKey="research.projects.emergency.gallery.close"
+        prevKey="research.projects.emergency.gallery.prev"
+        nextKey="research.projects.emergency.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="project-panel__cta-row">
+        <ProjectDemoLink lang={lang} project={project} />
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track-event="CTA GitHub"
+              data-track-project={project.id}
+              data-track-placement="investigacion"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'yohualli' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.yohualli.purpose')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.yohualli.trilemma')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.yohualli.zk')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.yohualli.compute')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.yohualli.why')}
+      </p>
+      <p class="mt-4 rounded-lg border border-line/80 bg-paper-dark/40 p-4 text-sm leading-relaxed text-ink-muted sm:text-base">
+        {t('research.projects.yohualli.funding')}
+      </p>
+
+      <ProjectGallery
+        lang={lang}
+        galleryId="yohualli"
+        screenshots={yohualliScreenshots}
+        labelKey="research.projects.yohualli.gallery.label"
+        dialogKey="research.projects.yohualli.gallery.dialog"
+        expandKey="research.projects.yohualli.gallery.expand"
+        closeKey="research.projects.yohualli.gallery.close"
+        prevKey="research.projects.yohualli.gallery.prev"
+        nextKey="research.projects.yohualli.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="project-panel__cta-row">
+        <ProjectDemoLink lang={lang} project={project} />
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track-event="CTA GitHub"
+              data-track-project={project.id}
+              data-track-placement="investigacion"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'zkpoll' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.zkpoll.note')}
+      </p>
+
+      <div class="project-panel__cta-row">
+        {
+          project.githubHref && (
+            <a
+              href={projectHref()}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'kume' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.kume.model')}
+      </p>
+      <p class="mt-4 rounded-lg border border-line/80 bg-paper-dark/40 p-4 text-sm leading-relaxed text-ink-muted sm:text-base">
+        {t('research.projects.kume.funding')}
+      </p>
+
+      <div class="project-panel__cta-row">
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={projectHref()}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'auradid' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.auradid.heritage')}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.auradid.path')}
+      </p>
+
+      <div class="project-panel__cta-row">
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={projectHref()}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id !== 'criteria' &&
+    project.id !== 'lumo' &&
+    project.id !== 'aura' &&
+    project.id !== 'auradid' &&
+    project.id !== 'andino' &&
+    project.id !== 'emergency' &&
+    project.id !== 'yohualli' &&
+    project.id !== 'zkpoll' &&
+    project.id !== 'kume' && (
+    <>
+      <p class="text-base leading-relaxed text-ink-muted">{t(project.descKey)}</p>
+
+      <div class="project-panel__cta-row">
+        {
+          isLiveApp && (
+            <a
+              href={project.href}
+              class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.visit')}
+            </a>
+          )
+        }
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={projectHref()}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}

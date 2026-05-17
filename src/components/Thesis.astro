@@ -1,0 +1,28 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="tesis" class="border-b border-line py-20 sm:py-28">
+  <div class="section-width grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-20">
+    <div>
+      <SectionLabel label={t('thesis.label')} />
+      <h2 class="font-display text-3xl font-medium leading-tight text-ink sm:text-4xl">
+        {t('thesis.title')}
+      </h2>
+    </div>
+    <div class="space-y-5 text-lg leading-relaxed text-ink-muted">
+      <p>{t('thesis.p1')}</p>
+      <p>{t('thesis.p2')}</p>
+      <p class="text-ink">{t('thesis.p3')}</p>
+    </div>
+  </div>
+</section>

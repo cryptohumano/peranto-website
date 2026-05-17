@@ -1,0 +1,7 @@
+# Copia a compose.override.yml para exponer el puerto local (detrás de Caddy/Nginx/Traefik).
+# cp compose.override.yml.example compose.override.yml
+
+services:
+  plausible:
+    ports:
+      - '127.0.0.1:8000:8000'

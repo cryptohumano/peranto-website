@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Dominio principal (landing)
+Sitemap: https://peranto.app/sitemap-index.xml
+
+# Laboratorio Ghost (subdominio — enviar también en Search Console)
+# Sitemap: https://learn.peranto.app/sitemap.xml

@@ -1,0 +1,86 @@
+---
+import logoIcon from '../assets/logo-icon.png';
+import artistCredit from '../assets/Ilustración_sin_título.png';
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n/ui';
+import { getAlternateLang, pathForLang, useTranslations } from '../i18n/ui';
+import { siteConfig } from '../config/site';
+import { isAnalyticsEnabled } from '../lib/analytics';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const altLang = getAlternateLang(lang);
+const year = new Date().getFullYear();
+const analyticsOn = isAnalyticsEnabled();
+---
+
+<footer class="border-t border-line bg-paper-dark/40 py-10 sm:py-12">
+  <div class="section-width flex flex-col gap-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <Image src={logoIcon} alt="" width={36} height={36} class="rounded-lg" />
+        <div>
+          <p class="font-display text-lg text-ink">Peranto</p>
+          <p class="text-sm text-ink-muted">{t('footer.tagline')}</p>
+        </div>
+      </div>
+      <nav
+        class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-muted"
+        aria-label="Footer"
+      >
+        <a href={pathForLang(altLang)} hreflang={altLang} class="hover:text-ink">
+          {altLang === 'es' ? 'Español' : 'English'}
+        </a>
+        <a
+          href={siteConfig.ghostUrl}
+          class="hover:text-ink"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('nav.lab')}
+        </a>
+        <a
+          href={siteConfig.githubOrg}
+          class="hover:text-ink"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+        <a href={`mailto:${siteConfig.email}`} class="hover:text-ink">
+          {siteConfig.email}
+        </a>
+      </nav>
+    </div>
+
+    <div
+      class="flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div class="text-xs text-ink-faint">
+        <p>
+          © {year} Peranto. {t('footer.rights')}
+        </p>
+        {analyticsOn && <p class="mt-1">{t('footer.analytics')}</p>}
+      </div>
+
+      <div class="footer-artist flex items-center gap-2.5 sm:justify-end">
+        <span class="text-[11px] font-mono uppercase tracking-[0.12em] text-ink-faint">
+          {t('footer.artBy')}
+        </span>
+        <div class="footer-artist__badge" title={t('footer.artistAlt')}>
+          <Image
+            src={artistCredit}
+            alt={t('footer.artistAlt')}
+            width={120}
+            height={120}
+            class="footer-artist__logo"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
