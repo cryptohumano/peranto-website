@@ -55,7 +55,7 @@ npm run preview
 
 Repositorio: [cryptohumano/peranto-website](https://github.com/cryptohumano/peranto-website).
 
-1. En GitHub: **Settings → Pages → Build and deployment** → Source: **GitHub Actions**.
+1. **Obligatorio antes del primer deploy:** [Settings → Pages](https://github.com/cryptohumano/peranto-website/settings/pages) → **Build and deployment** → Source: **GitHub Actions** (no «Deploy from a branch»). Sin esto, el job `deploy-pages` falla con `HttpError: Not Found`.
 2. Push a la rama `main` (el workflow `.github/workflows/deploy-pages.yml` construye y publica `dist/`).
 3. **Secrets** (opcionales, se pueden añadir después): mismos nombres que en `.env.example` → Settings → Secrets and variables → Actions.
 4. **Dominio custom** `peranto.app`: el archivo `public/CNAME` ya está en el repo. En Cloudflare (o tu DNS):
