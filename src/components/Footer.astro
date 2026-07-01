@@ -21,12 +21,24 @@ const analyticsOn = isAnalyticsEnabled();
 <footer class="border-t border-line bg-paper-dark/40 py-10 sm:py-12">
   <div class="section-width flex flex-col gap-8">
     <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex items-center gap-3">
-        <Image src={logoIcon} alt="" width={36} height={36} class="rounded-lg" />
-        <div>
-          <p class="font-display text-lg text-ink">Peranto</p>
-          <p class="text-sm text-ink-muted">{t('footer.tagline')}</p>
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3">
+          <Image src={logoIcon} alt="" width={36} height={36} class="rounded-lg" />
+          <div>
+            <p class="font-display text-lg text-ink">Peranto</p>
+            <p class="text-sm text-ink-muted">{t('footer.tagline')}</p>
+          </div>
         </div>
+        <a 
+          href="https://www.itu.int/net4/wsis/forum/2023/Files/ocp/WF23OCPP5PRES-en.pdf" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="flex items-center gap-2.5 rounded border border-line bg-paper px-3 py-1.5 transition hover:bg-line/20 max-w-max"
+          title="ITU / UN WSIS Forum 2023 Hackathon Winner"
+        >
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" alt="ITU Logo" class="h-5 w-auto object-contain" />
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">WSIS 2023 Winner</span>
+        </a>
       </div>
       <nav
         class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-muted"
