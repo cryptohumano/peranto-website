@@ -61,7 +61,11 @@ Repositorio: [cryptohumano/peranto-website](https://github.com/cryptohumano/pera
 4. **Dominio custom** `peranto.app`: el archivo `public/CNAME` ya está en el repo. En Cloudflare (o tu DNS):
    - Registro **A** `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - O **CNAME** `@` / `www` según tu proveedor (Cloudflare: CNAME a `cryptohumano.github.io` con proxy desactivado para Pages, o usar las IPs de GitHub)
-   - En GitHub → Pages → **Custom domain** → `peranto.app` y activar HTTPS.
+   - En GitHub → Pages → **Custom domain** → `peranto.app`.
+5. **HTTPS (obligatorio en producción):**
+   - GitHub → [Settings → Pages](https://github.com/cryptohumano/peranto-website/settings/pages): cuando el DNS esté verificado, espera el certificado (minutos u horas) y marca **Enforce HTTPS**.
+   - Si usas **Cloudflare** para `peranto.app`: SSL/TLS → **Full (strict)** (no «Flexible»); en Edge Certificates activa **Always Use HTTPS**. Sin eso el navegador puede quedarse en `http://` aunque el sitio cargue.
+   - La landing incluye un redirect cliente `http` → `https` como respaldo; lo correcto es el redirect en GitHub/Cloudflare.
 
 Plausible en Railway (no en este repo estático): [plantilla](https://railway.com/template/mzYEXO) → `analytics.peranto.app`; luego añade los secrets `PUBLIC_ANALYTICS_*`.
 

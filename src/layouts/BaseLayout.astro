@@ -39,6 +39,17 @@ const analyticsOn = isAnalyticsEnabled();
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
+    {import.meta.env.PROD && (
+      <script is:inline>
+        if (
+          location.protocol === 'http:' &&
+          location.hostname !== 'localhost' &&
+          !location.hostname.endsWith('.local')
+        ) {
+          location.replace(location.href.replace(/^http:/, 'https:'));
+        }
+      </script>
+    )}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content={robots} />
     <meta name="theme-color" content={seoConfig.themeColor} />
