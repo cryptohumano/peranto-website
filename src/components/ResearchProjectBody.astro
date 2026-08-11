@@ -9,9 +9,10 @@ import { andinoScreenshots } from '../config/andino-screenshots';
 import { emergencyScreenshots } from '../config/emergency-screenshots';
 import { lumoFeatureKeys } from '../config/lumo-features';
 import { lumoScreenshots } from '../config/lumo-screenshots';
+import { perantoProtocolScreenshots } from '../config/peranto-protocol-screenshots';
 import { yohualliScreenshots } from '../config/yohualli-screenshots';
 import type { ResearchProject } from '../config/research-projects';
-import { siteConfig } from '../config/site';
+import { buildContactHref } from '../lib/contact-intent';
 
 interface Props {
   lang: Lang;
@@ -21,6 +22,13 @@ interface Props {
 
 const { lang, project, labUrl = null } = Astro.props;
 const t = useTranslations(lang);
+
+const lumoContactHref = buildContactHref(lang, {
+  interest: 'lumo',
+  topic: lang === 'es' ? 'Lumo — consulta de adopción' : 'Lumo — adoption inquiry',
+  ref: 'lumo-adoption',
+  path: `/${lang}/#investigacion`,
+});
 
 const isLiveApp =
   project.status === 'live' &&
@@ -162,8 +170,10 @@ function projectHref() {
 
       <div class="project-panel__cta-row">
         <a
-          href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(lang === 'es' ? 'Lumo — consulta de adopción' : 'Lumo — adoption inquiry')}`}
+          href={lumoContactHref}
           class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+          data-track-event="CTA Lumo Contact"
+          data-track-placement="research-lumo"
         >
           {t('research.projects.lumo.cta.contact')}
         </a>
@@ -227,6 +237,88 @@ function projectHref() {
               class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
               target="_blank"
               rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
+
+{
+  project.id === 'peranto-protocol' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+
+      <div class="mt-8 space-y-6">
+        <div class="rounded-lg border border-line/80 bg-paper/80 p-5 sm:p-6">
+          <h4 class="font-display text-lg font-medium text-ink">
+            {t('research.projects.peranto-protocol.disco.title')}
+          </h4>
+          <p class="mt-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+            {t('research.projects.peranto-protocol.disco.body')}
+          </p>
+        </div>
+        <div class="rounded-lg border border-line/80 bg-paper/80 p-5 sm:p-6">
+          <h4 class="font-display text-lg font-medium text-ink">
+            {t('research.projects.peranto-protocol.economy.title')}
+          </h4>
+          <p class="mt-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+            {t('research.projects.peranto-protocol.economy.body')}
+          </p>
+        </div>
+        <div class="rounded-lg border border-deep/20 bg-accent-soft/40 p-5 sm:p-6">
+          <h4 class="font-display text-lg font-medium text-ink">
+            {t('research.projects.peranto-protocol.dividends.title')}
+          </h4>
+          <p class="mt-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+            {t('research.projects.peranto-protocol.dividends.body')}
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-8 text-base leading-relaxed text-ink-muted">
+        {t('research.projects.peranto-protocol.stack')}
+      </p>
+
+      <ProjectGallery
+        lang={lang}
+        shots={perantoProtocolScreenshots}
+        labelKey="research.projects.peranto-protocol.gallery.label"
+        dialogKey="research.projects.peranto-protocol.gallery.dialog"
+        expandKey="research.projects.peranto-protocol.gallery.expand"
+        closeKey="research.projects.peranto-protocol.gallery.close"
+        prevKey="research.projects.peranto-protocol.gallery.prev"
+        nextKey="research.projects.peranto-protocol.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="project-panel__cta-row">
+        <ProjectDemoLink lang={lang} project={project} />
+        {
+          labUrl && (
+            <a
+              href={labUrl}
+              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+              target="_blank"
+              rel="noopener"
+            >
+              {t('research.projects.lab')}
+            </a>
+          )
+        }
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track-event="CTA GitHub"
+              data-track-project={project.id}
+              data-track-placement="investigacion"
             >
               {t('research.link.github')}
             </a>
@@ -539,6 +631,7 @@ function projectHref() {
     project.id !== 'lumo' &&
     project.id !== 'aura' &&
     project.id !== 'auradid' &&
+    project.id !== 'peranto-protocol' &&
     project.id !== 'andino' &&
     project.id !== 'emergency' &&
     project.id !== 'yohualli' &&

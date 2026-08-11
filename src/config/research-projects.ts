@@ -27,19 +27,18 @@ const gh = (repo: string) => `https://github.com/cryptohumano/${repo}`;
 
 /** Proyectos públicos — ordenados dentro de cada grupo */
 export const researchProjects: ResearchProject[] = [
-  // Destacado (sin grupo en lista)
+  // Destacado — columna vertebral del ecosistema
   {
-    id: 'criteria',
+    id: 'peranto-protocol',
     group: 'identity',
-    status: 'live',
+    status: 'poc',
     featured: true,
-    href: 'https://criteria.peranto.app',
-    subscribeHref: 'https://criteria.peranto.app',
-    githubHref: gh('criteria'),
-    ghostTag: 'criteria',
+    href: 'https://cryptohumano.github.io/peranto-protocol/#/login',
+    githubHref: gh('peranto-protocol'),
+    ghostTag: 'peranto-protocol',
     defaultOpen: true,
-    titleKey: 'research.projects.criteria.title',
-    descKey: 'research.projects.criteria.desc',
+    titleKey: 'research.projects.peranto-protocol.title',
+    descKey: 'research.projects.peranto-protocol.desc',
   },
   // Economía solidaria
   {
@@ -55,6 +54,19 @@ export const researchProjects: ResearchProject[] = [
     descKey: 'research.projects.lumo.desc',
   },
   // Identidad e infraestructura
+  {
+    id: 'criteria',
+    group: 'identity',
+    status: 'live',
+    showcase: true,
+    href: 'https://criteria.peranto.app',
+    subscribeHref: 'https://criteria.peranto.app',
+    githubHref: gh('criteria'),
+    ghostTag: 'criteria',
+    defaultOpen: false,
+    titleKey: 'research.projects.criteria.title',
+    descKey: 'research.projects.criteria.desc',
+  },
   {
     id: 'auradid',
     group: 'identity',

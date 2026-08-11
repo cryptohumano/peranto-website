@@ -11,7 +11,7 @@ export const ui = {
   es: {
     'meta.title': 'Peranto — Soberanía digital con propósito',
     'meta.description':
-      'Identidad digital autosoberana, infraestructura soberana y software abierto (CriterIA, Lumo, AuraDID). Investigación verificable, código auditable y herramientas para economía solidaria comunitaria.',
+      'Peranto Protocol: identidad digital autosoberana, credenciales verificables y economía DisCO. Software abierto (CriterIA, Lumo, Aura) con valor que recircula — no renta extractiva.',
     'nav.thesis': 'Tesis',
     'nav.pillars': 'Pilares',
     'nav.research': 'Investigación',
@@ -59,27 +59,27 @@ export const ui = {
     'research.label': 'Práctica',
     'research.title': 'Investigación desplegada',
     'research.intro':
-      'Software en producción y experimentos abiertos. Priorizamos herramientas que puedes auditar, autohospedar o usar tal cual — sin capturar tus datos.',
+      'El núcleo es Peranto Protocol: identidad autosoberana, credenciales verificables y nodos DisCO que recirculan valor. Alrededor, software en producción y experimentos que puedes auditar o autohospedar — sin capturar tus datos.',
     'research.solidarity':
-      'No aspiramos a competir con gigantes de mercado a escala global. Publicamos infraestructura para que comunidades desplieguen alternativas — movilidad, identidad, voto, coordinación — en el marco del boycot, desinversión y sanciones (BDS) y la economía solidaria activa: pilotos locales, código abierto, escalabilidad comunitaria.',
+      'No aspiramos a competir con gigantes de mercado a escala global. Publicamos infraestructura para que comunidades desplieguen alternativas — identidad, movilidad, voto, coordinación — en el marco del boycot, desinversión y sanciones (BDS) y la economía solidaria activa: pilotos locales, código abierto, escalabilidad comunitaria.',
     'research.groups.solidarity': 'Economía solidaria comunitaria',
     'research.groups.identity': 'Identidad e infraestructura',
     'research.groups.governance': 'Gobernanza y participación',
     'research.groups.commons': 'Seguridad y bien común',
     'research.groups.health': 'Salud comunitaria',
     'research.payments.label': 'Economía del ecosistema',
-    'research.payments.title': 'Claves en tu dispositivo; pagos en transición',
+    'research.payments.title': 'Identidad que recircula; no renta extractiva',
     'research.payments.lead':
-      'No vendemos soberanía de datos mientras escondemos la dependencia del dinero. El ecosistema Peranto separa tres capas y las comunicamos con transparencia.',
-    'research.payments.architecture.title': 'Arquitectura común',
+      'Peranto Protocol une SSI y economía DisCO: lo que se paga por identidad y credenciales alimenta un commons temporal que vuelve a los nodos — no a una cuenta privada del protocolo.',
+    'research.payments.architecture.title': 'Capa común',
     'research.payments.architecture.body':
-      'CriterIA, Lumo, las wallets y los protocolos ZK incorporan identidad criptográfica (Substrate/Polkadot): firmas, cuentas y liquidación pensadas para que la confianza no pase solo por un login corporativo ni por una pasarela única.',
+      'DID, anclas de VC y fees (nombre, emisión) van a la tesorería del protocolo. CriterIA, Lumo, wallets y líneas ZK se apoyan en esa identidad criptográfica para que la confianza no dependa de un login ni de una pasarela única.',
     'research.payments.bridge.title': 'Puente de hoy',
     'research.payments.bridge.body':
-      'En CriterIA el plan gestionado usa Stripe por simplicidad operativa: suscripción opcional, sin bloquear el autohospedaje ni el código abierto. Quien no quiera esa vía puede operar con su propia infraestructura y API key.',
-    'research.payments.direction.title': 'Hacia dónde vamos',
+      'En CriterIA el plan gestionado aún usa Stripe por simplicidad operativa: suscripción opcional, sin bloquear el autohospedaje. Es el puente mientras madura el circuito on-chain del protocolo.',
+    'research.payments.direction.title': 'Reparto DisCO',
     'research.payments.direction.body':
-      'Investigamos cuotas, membresías y pagos entre pares verificables en cadena — para que comunidades y cooperativas reduzcan la dependencia de instrumentos financieros extractivos. Es un camino por fases, documentado en repositorios y en el laboratorio.',
+      'Al cierre de periodo, harvest y distribute regresan valor a los nodos elegibles según Care, Love y anclas. Quien aportó a la capa de identidad participa del recirculo — dividendos cooperativos, no peaje a una EOA.',
     'research.status.live': 'En vivo',
     'research.status.poc': 'PoC funcional',
     'research.status.experiment': 'Experimento',
@@ -172,6 +172,34 @@ export const ui = {
       'Conductor: viaje aceptado con distancia, duración, precio y acciones de ruta.',
     'research.projects.lumo.shot.verify':
       'Inicio verificado: ubicación GPS, PIN o QR antes de arrancar el viaje.',
+    'research.projects.peranto-protocol.title': 'Peranto Protocol',
+    'research.projects.peranto-protocol.desc':
+      'Columna vertebral del ecosistema: did:peranto, credenciales verificables y nodos DisCO en EVM/PVM — identidad soberana con economía solidaria on-chain (Paseo / Hardhat).',
+    'research.projects.peranto-protocol.disco.title': '¿Qué es una DisCO?',
+    'research.projects.peranto-protocol.disco.body':
+      'Una DisCO (Distributed Cooperative Organization) es una cooperativa distribuida: miembros, tesoro propio y reglas auditables. No es una DAO que solo maximiza stake: reconoce Livelihood (sustento), Love (commons / pro-bono) y Care (cuidado mutuo y reproducción del colectivo).',
+    'research.projects.peranto-protocol.economy.title': 'Economía solidaria en el protocolo',
+    'research.projects.peranto-protocol.economy.body':
+      'Cada nodo regula la frontera entre lo privado y lo común. Tips, aportes y trabajo documentado mueven Love y Care; el sustento pagado (Livelihood) puede dejar una fracción al tesoro del nodo. La reputación del periodo es medible, no un eslogan.',
+    'research.projects.peranto-protocol.dividends.title': 'Identidad que vuelve como dividendo',
+    'research.projects.peranto-protocol.dividends.body':
+      'Registrar un nombre, anclar una credencial o contribuir al circuito deja fees en la ProtocolTreasury. Al cierre del periodo, harvest y distribute recirculan ese valor a los nodos DisCO elegibles — y desde ahí a quienes sostuvieron la capa de identidad. Quien pagó por existir en el protocolo no alimenta renta extractiva: participa del reparto.',
+    'research.projects.peranto-protocol.stack':
+      'Contratos + SDK + CLI, Aura Wallet (extensión MV3) y portal con linktr33. Los datos sensibles van en el JWT; en cadena solo el ancla y los flujos económicos.',
+    'research.projects.peranto-protocol.gallery.label': 'Portal Peranto',
+    'research.projects.peranto-protocol.gallery.expand': 'Ampliar captura',
+    'research.projects.peranto-protocol.gallery.dialog': 'Vista ampliada de Peranto Protocol',
+    'research.projects.peranto-protocol.gallery.close': 'Cerrar',
+    'research.projects.peranto-protocol.gallery.prev': 'Anterior',
+    'research.projects.peranto-protocol.gallery.next': 'Siguiente',
+    'research.projects.peranto-protocol.shot.identity':
+      'Identidad Peranto: wallet, pertenencias DisCO, credenciales y servicios del DID.',
+    'research.projects.peranto-protocol.shot.linktr33':
+      'Página pública linktr33: perfil @nombre, canales y tarjeta de presentación con QR.',
+    'research.projects.peranto-protocol.shot.credentials':
+      'Catálogo de schemas DisCO: reclamar, solicitar y emitir Member, EcoTest, CommonsWork y Care.',
+    'research.projects.peranto-protocol.shot.economia':
+      'Economía solidaria: DISCOs activos, servicios/schemas y reputación Love/Care del periodo.',
     'research.projects.auradid.title': 'AuraDID',
     'research.projects.auradid.desc':
       'Refactor del runtime Substrate de la parachain KILT (descontinuada) hacia Polkadot actual. Credenciales verificables en pausa por incompatibilidad serde entre el legado y los paquetes nuevos.',
@@ -309,8 +337,38 @@ export const ui = {
     'collaborate.path.support.cta': 'Proponer apoyo',
     'collaborate.path.support.secondary': 'Leer en el laboratorio',
     'collaborate.footer':
-      'También puedes escribirnos directamente a hola@peranto.app — respondemos cuando podemos, sin embudo de ventas.',
-    'collaborate.email': 'hola@peranto.app',
+      'También puedes escribirnos directamente a outreach@peranto.app — respondemos cuando podemos, sin embudo de ventas.',
+    'collaborate.email': 'outreach@peranto.app',
+    'contact.meta.title': 'Contacto — Peranto',
+    'contact.meta.description':
+      'Escríbenos sobre CriterIA, Lumo, investigación o apoyo. Respondemos cuando podemos, sin embudo de ventas.',
+    'contact.label': 'Contacto',
+    'contact.title': 'Hablemos',
+    'contact.lead':
+      'Cuéntanos qué te interesa. Preferimos WhatsApp o correo — sin formularios interminables.',
+    'contact.success': 'Gracias. Recibimos tu mensaje y te contactaremos pronto.',
+    'contact.error.missing':
+      'Faltan campos obligatorios (nombre, email, teléfono/WhatsApp y mensaje).',
+    'contact.error.db':
+      'No pudimos guardar el mensaje en el sistema. Si configuraste Telegram, puede que igual te haya llegado ahí. Escríbenos a',
+    'contact.error.generic': 'No pudimos enviar el mensaje. Escríbenos a',
+    'contact.prefill': 'Prellenamos el formulario con el contexto de',
+    'contact.field.name': 'Nombre',
+    'contact.field.email': 'Email',
+    'contact.field.company': 'Organización (opcional)',
+    'contact.field.phone': 'Teléfono / WhatsApp',
+    'contact.field.channel': 'Canal preferido',
+    'contact.field.interest': 'Interés',
+    'contact.field.message': 'Mensaje',
+    'contact.channel.whatsapp': 'WhatsApp',
+    'contact.channel.email': 'Email',
+    'contact.channel.phone': 'Llamada',
+    'contact.interest.placeholder': 'Selecciona una opción',
+    'contact.submit': 'Enviar mensaje',
+    'contact.aside.title': 'Datos directos',
+    'contact.aside.collaborate': 'Volver a colaborar',
+    'contact.aside.note':
+      'Sin embudo de ventas. Leemos cada mensaje y respondemos cuando podemos.',
     'footer.tagline': 'Soberanía digital con propósito.',
     'footer.artBy': 'Arte realizado por:',
     'footer.artistAlt': 'Cripto Street',
@@ -322,7 +380,7 @@ export const ui = {
   en: {
     'meta.title': 'Peranto — Digital sovereignty, on purpose',
     'meta.description':
-      'Self-sovereign digital identity, sovereign infrastructure, and open software (CriterIA, Lumo, AuraDID). Verifiable research, auditable code, and tools for community solidarity economies.',
+      'Peranto Protocol: self-sovereign digital identity, verifiable credentials, and DisCO economics. Open software (CriterIA, Lumo, Aura) with value that recirculates — not extractive rent.',
     'nav.thesis': 'Thesis',
     'nav.pillars': 'Pillars',
     'nav.research': 'Research',
@@ -370,27 +428,27 @@ export const ui = {
     'research.label': 'Practice',
     'research.title': 'Deployed research',
     'research.intro':
-      'Software in production and open experiments. We prioritize tools you can audit, self-host, or use as-is — without capturing your data.',
+      'The spine is Peranto Protocol: self-sovereign identity, verifiable credentials, and DisCO nodes that recirculate value. Around it, production software and experiments you can audit or self-host — without capturing your data.',
     'research.solidarity':
-      'We are not trying to outscale global market giants. We publish infrastructure so communities can deploy alternatives — mobility, identity, voting, coordination — within boycott, divestment, and sanctions (BDS) and active solidarity economies: local pilots, open source, community-scale growth.',
+      'We are not trying to outscale global market giants. We publish infrastructure so communities can deploy alternatives — identity, mobility, voting, coordination — within boycott, divestment, and sanctions (BDS) and active solidarity economies: local pilots, open source, community-scale growth.',
     'research.groups.solidarity': 'Community solidarity economy',
     'research.groups.identity': 'Identity and infrastructure',
     'research.groups.governance': 'Governance and participation',
     'research.groups.commons': 'Safety and commons',
     'research.groups.health': 'Community health',
     'research.payments.label': 'Ecosystem economics',
-    'research.payments.title': 'Keys on your device; payments in transition',
+    'research.payments.title': 'Identity that recirculates — not extractive rent',
     'research.payments.lead':
-      'We do not sell data sovereignty while hiding money dependence. The Peranto ecosystem separates three layers and states them openly.',
-    'research.payments.architecture.title': 'Shared architecture',
+      'Peranto Protocol joins SSI and DisCO economics: what is paid for identity and credentials feeds a temporary commons that returns to the nodes — not to a private protocol account.',
+    'research.payments.architecture.title': 'Shared layer',
     'research.payments.architecture.body':
-      'CriterIA, Lumo, the wallets, and ZK protocols embed cryptographic identity (Substrate/Polkadot): signing, accounts, and settlement so trust does not flow only through a corporate login or a single gateway.',
+      'DIDs, VC anchors, and fees (name, issuance) flow into the protocol treasury. CriterIA, Lumo, wallets, and ZK lines lean on that cryptographic identity so trust does not depend on a corporate login or a single gateway.',
     'research.payments.bridge.title': 'Today’s bridge',
     'research.payments.bridge.body':
-      'On CriterIA, the managed plan uses Stripe for operational simplicity: optional subscription, without blocking self-hosting or open source. If you do not want that path, run your own stack and API key.',
-    'research.payments.direction.title': 'Where we are headed',
+      'On CriterIA, the managed plan still uses Stripe for operational simplicity: optional subscription, without blocking self-hosting. It is the bridge while the protocol’s on-chain circuit matures.',
+    'research.payments.direction.title': 'DisCO distribution',
     'research.payments.direction.body':
-      'We research quotas, memberships, and verifiable peer payments on-chain — so communities and cooperatives can reduce reliance on extractive financial instruments. A phased path, documented in repos and the lab.',
+      'At period close, harvest and distribute return value to eligible nodes by Care, Love, and anchors. Whoever contributed to the identity layer joins the recirculation — cooperative dividends, not a toll to an EOA.',
     'research.status.live': 'Live',
     'research.status.poc': 'Functional PoC',
     'research.status.experiment': 'Experiment',
@@ -483,6 +541,34 @@ export const ui = {
       'Driver: accepted trip with distance, duration, fare, and route actions.',
     'research.projects.lumo.shot.verify':
       'Verified start: GPS location, PIN or QR before the trip begins.',
+    'research.projects.peranto-protocol.title': 'Peranto Protocol',
+    'research.projects.peranto-protocol.desc':
+      'Spine of the ecosystem: did:peranto, verifiable credentials, and DisCO nodes on EVM/PVM — sovereign identity with on-chain solidarity economics (Paseo / Hardhat).',
+    'research.projects.peranto-protocol.disco.title': 'What is a DisCO?',
+    'research.projects.peranto-protocol.disco.body':
+      'A DisCO (Distributed Cooperative Organization) is a distributed cooperative: members, its own treasury, and auditable rules. It is not a DAO that only maximizes stake — it recognizes Livelihood (income), Love (commons / pro-bono), and Care (mutual care and reproducing the collective).',
+    'research.projects.peranto-protocol.economy.title': 'Solidarity economy in the protocol',
+    'research.projects.peranto-protocol.economy.body':
+      'Each node sets the boundary between private and common. Tips, contributions, and documented work move Love and Care; paid livelihood can leave a share to the node treasury. Period reputation is measurable, not a slogan.',
+    'research.projects.peranto-protocol.dividends.title': 'Identity that returns as dividend',
+    'research.projects.peranto-protocol.dividends.body':
+      'Registering a name, anchoring a credential, or contributing to the circuit leaves fees in the ProtocolTreasury. At period close, harvest and distribute recirculate that value to eligible DisCO nodes — and from there to those who sustained the identity layer. Paying to exist in the protocol does not feed extractive rent: it joins the share-out.',
+    'research.projects.peranto-protocol.stack':
+      'Contracts + SDK + CLI, Aura Wallet (MV3 extension), and a portal with linktr33. Sensitive data lives in the JWT; only the anchor and economic flows sit on-chain.',
+    'research.projects.peranto-protocol.gallery.label': 'Peranto portal',
+    'research.projects.peranto-protocol.gallery.expand': 'Expand screenshot',
+    'research.projects.peranto-protocol.gallery.dialog': 'Peranto Protocol enlarged view',
+    'research.projects.peranto-protocol.gallery.close': 'Close',
+    'research.projects.peranto-protocol.gallery.prev': 'Previous',
+    'research.projects.peranto-protocol.gallery.next': 'Next',
+    'research.projects.peranto-protocol.shot.identity':
+      'Peranto identity: wallet, DisCO memberships, credentials, and DID services.',
+    'research.projects.peranto-protocol.shot.linktr33':
+      'Public linktr33 page: @name profile, channels, and business card with QR.',
+    'research.projects.peranto-protocol.shot.credentials':
+      'DisCO schema catalog: claim, request, and issue Member, EcoTest, CommonsWork, and Care.',
+    'research.projects.peranto-protocol.shot.economia':
+      'Solidarity economy: active DISCOs, services/schemas, and period Love/Care reputation.',
     'research.projects.auradid.title': 'AuraDID',
     'research.projects.auradid.desc':
       'Refactor of the discontinued KILT parachain Substrate runtime onto current Polkadot. Verifiable credentials paused: legacy serde no longer matches newer Polkadot serialization packages.',
@@ -620,8 +706,38 @@ export const ui = {
     'collaborate.path.support.cta': 'Offer support',
     'collaborate.path.support.secondary': 'Read in the lab',
     'collaborate.footer':
-      'You can also write us at hola@peranto.app — we reply when we can, with no sales funnel.',
-    'collaborate.email': 'hola@peranto.app',
+      'You can also write us at outreach@peranto.app — we reply when we can, with no sales funnel.',
+    'collaborate.email': 'outreach@peranto.app',
+    'contact.meta.title': 'Contact — Peranto',
+    'contact.meta.description':
+      'Write about CriterIA, Lumo, research, or support. We reply when we can, with no sales funnel.',
+    'contact.label': 'Contact',
+    'contact.title': "Let's talk",
+    'contact.lead':
+      'Tell us what you care about. We prefer WhatsApp or email — no endless forms.',
+    'contact.success': 'Thanks. We received your message and will get back to you soon.',
+    'contact.error.missing':
+      'Required fields are missing (name, email, phone/WhatsApp, and message).',
+    'contact.error.db':
+      'We could not save your message in the system. If Telegram is configured, it may still have arrived there. Write us at',
+    'contact.error.generic': 'We could not send your message. Write us at',
+    'contact.prefill': 'We prefilled the form with context from',
+    'contact.field.name': 'Name',
+    'contact.field.email': 'Email',
+    'contact.field.company': 'Organization (optional)',
+    'contact.field.phone': 'Phone / WhatsApp',
+    'contact.field.channel': 'Preferred channel',
+    'contact.field.interest': 'Interest',
+    'contact.field.message': 'Message',
+    'contact.channel.whatsapp': 'WhatsApp',
+    'contact.channel.email': 'Email',
+    'contact.channel.phone': 'Call',
+    'contact.interest.placeholder': 'Select an option',
+    'contact.submit': 'Send message',
+    'contact.aside.title': 'Direct details',
+    'contact.aside.collaborate': 'Back to collaborate',
+    'contact.aside.note':
+      'No sales funnel. We read every message and reply when we can.',
     'footer.tagline': 'Digital sovereignty, on purpose.',
     'footer.artBy': 'Artwork by:',
     'footer.artistAlt': 'Cripto Street',
