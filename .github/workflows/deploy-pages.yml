@@ -48,7 +48,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          # Páginas prerenderizadas + assets (SSR Node vive en dist/server; Pages solo sirve estático)
+          path: dist/client
 
   deploy:
     needs: build
