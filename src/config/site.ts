@@ -14,5 +14,5 @@ export const siteConfig = {
   siteUrl: 'https://peranto.app',
   ghostUrl: import.meta.env.PUBLIC_GHOST_URL ?? 'https://learn.peranto.app',
   githubOrg: 'https://github.com/cryptohumano',
-  email: 'hola@peranto.app',
+  email: 'outreach@peranto.app',
 };

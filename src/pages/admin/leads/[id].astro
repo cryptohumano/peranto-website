@@ -1,0 +1,325 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import {
+  channelLabel,
+  CONTACT_CHANNELS,
+  getLead,
+  PIPELINE_STATUSES,
+  statusLabel,
+  whatsappHref,
+} from '../../../lib/leads';
+import type { LeadStatus } from '../../../../generated/prisma/client';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+if (!id) {
+  return Astro.redirect('/admin');
+}
+
+const lead = await getLead(id);
+if (!lead) {
+  return new Response('Lead no encontrado', { status: 404 });
+}
+
+const wa = whatsappHref(lead.phone);
+const activityError = Astro.url.searchParams.get('error') === 'activity';
+const deleteError = Astro.url.searchParams.get('error') === 'delete';
+
+const pipelineIndex = PIPELINE_STATUSES.indexOf(lead.status as (typeof PIPELINE_STATUSES)[number]);
+const isLost = lead.status === 'LOST';
+
+type TimelineItem = {
+  kind: 'activity' | 'note';
+  at: Date;
+  channel?: string;
+  body: string;
+};
+
+const timeline: TimelineItem[] = [
+  ...lead.activities.map((a) => ({
+    kind: 'activity' as const,
+    at: a.createdAt,
+    channel: channelLabel[a.channel],
+    body: a.body,
+  })),
+  ...lead.notes.map((n) => ({
+    kind: 'note' as const,
+    at: n.createdAt,
+    body: n.body,
+  })),
+].sort((a, b) => b.at.getTime() - a.at.getTime());
+
+const stageButtons: LeadStatus[] = [
+  'NEW',
+  'QUALIFIED',
+  'CONTACTED',
+  'MEETING',
+  'PROPOSAL',
+  'WON',
+  'LOST',
+];
+
+function stageClass(value: LeadStatus) {
+  const pipelinePos = PIPELINE_STATUSES.indexOf(value);
+  const current = lead.status === value;
+  const reached =
+    !isLost && pipelineIndex >= 0 && pipelinePos >= 0 && pipelinePos <= pipelineIndex;
+  if (current) return 'rounded-md bg-deep px-3 py-1.5 text-sm font-medium text-white';
+  if (reached) return 'rounded-md bg-accent-soft px-3 py-1.5 text-sm font-medium text-deep';
+  return 'rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:border-deep/40';
+}
+---
+
+<AdminLayout title={lead.name || lead.email}>
+  <div class="mx-auto max-w-3xl space-y-6 px-4 py-6 sm:px-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <a href="/admin" class="text-sm text-ink-muted hover:text-deep">← Leads</a>
+      <div class="flex flex-wrap items-center gap-2">
+        {
+          wa && (
+            <a
+              href={wa}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-md border border-line px-3 py-1.5 text-sm font-medium text-deep hover:border-deep/40"
+            >
+              WhatsApp
+            </a>
+          )
+        }
+        <form
+          method="POST"
+          action={`/api/admin/leads/${lead.id}/delete`}
+          onsubmit="return confirm('¿Eliminar este lead? Se borrarán notas y actividades.');"
+        >
+          <button
+            type="submit"
+            class="rounded-md border border-line px-3 py-1.5 text-sm text-ink-faint hover:border-ink/30 hover:text-ink"
+          >
+            Eliminar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {
+      deleteError && (
+        <p class="rounded-md border border-line bg-paper-dark/70 px-4 py-3 text-sm">
+          No se pudo eliminar el lead.
+        </p>
+      )
+    }
+    {
+      activityError && (
+        <p class="rounded-md border border-line bg-paper-dark/70 px-4 py-3 text-sm">
+          No se pudo registrar el contacto. Elige canal y escribe un detalle.
+        </p>
+      )
+    }
+
+    <section class="rounded-xl border border-line bg-paper p-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="font-display text-2xl font-medium text-ink">{lead.name || 'Sin nombre'}</h1>
+        <span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-deep">
+          {statusLabel[lead.status] ?? lead.status}
+        </span>
+        {isLost && (
+          <span class="rounded-full bg-paper-dark px-2.5 py-0.5 text-xs text-ink-muted">
+            Fuera de pipeline
+          </span>
+        )}
+      </div>
+      <p class="mt-1 text-sm text-ink-muted">{lead.email}</p>
+
+      <dl class="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt class="text-ink-faint">Organización</dt>
+          <dd>{lead.company || '—'}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Interés</dt>
+          <dd>{lead.interest || '—'}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Teléfono</dt>
+          <dd>
+            {
+              lead.phone ? (
+                wa ? (
+                  <a class="font-medium text-deep hover:underline" href={wa} target="_blank" rel="noopener noreferrer">
+                    {lead.phone}
+                  </a>
+                ) : (
+                  lead.phone
+                )
+              ) : (
+                '—'
+              )
+            }
+          </dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Canal preferido</dt>
+          <dd>{lead.preferredChannel ? channelLabel[lead.preferredChannel] : '—'}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Origen</dt>
+          <dd>{lead.source}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Último contacto</dt>
+          <dd>
+            {
+              lead.lastContactedAt
+                ? `${lead.lastContactedAt.toLocaleString('es-MX')}${
+                    lead.lastContactChannel
+                      ? ` · ${channelLabel[lead.lastContactChannel]}`
+                      : ''
+                  }`
+                : '—'
+            }
+          </dd>
+        </div>
+        <div>
+          <dt class="text-ink-faint">Creado</dt>
+          <dd>{lead.createdAt.toLocaleString('es-MX')}</dd>
+        </div>
+      </dl>
+
+      {
+        lead.message && (
+          <div class="mt-6 border-t border-line pt-4">
+            <p class="text-xs uppercase tracking-wider text-ink-faint">Mensaje</p>
+            <p class="mt-2 whitespace-pre-wrap text-sm leading-relaxed">{lead.message}</p>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="rounded-xl border border-line bg-paper p-6">
+      <h2 class="font-display text-lg font-medium text-ink">Ciclo de venta</h2>
+      <form class="mt-4 space-y-3" method="POST" action={`/api/admin/leads/${lead.id}/status`}>
+        <div class="flex flex-wrap gap-2">
+          {
+            stageButtons.map((value) => (
+              <button name="status" value={value} type="submit" class={stageClass(value)}>
+                {statusLabel[value]}
+              </button>
+            ))
+          }
+        </div>
+        <div class="grid gap-3 sm:grid-cols-[1fr_2fr]">
+          <div>
+            <label for="status-channel" class="text-sm font-medium text-ink">
+              Canal al cambiar etapa
+            </label>
+            <select
+              id="status-channel"
+              name="channel"
+              class="mt-2 h-9 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+            >
+              <option value="">Sin registrar canal</option>
+              {CONTACT_CHANNELS.map((ch) => (
+                <option value={ch}>{channelLabel[ch]}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="status-note" class="text-sm font-medium text-ink">
+              Nota de avance (opcional)
+            </label>
+            <input
+              id="status-note"
+              name="note"
+              class="mt-2 h-9 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+              placeholder="Ej. Confirmó reunión el jueves"
+            />
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="rounded-xl border border-line bg-paper p-6">
+      <h2 class="font-display text-lg font-medium text-ink">Registrar contacto</h2>
+      <form class="mt-4 space-y-3" method="POST" action={`/api/admin/leads/${lead.id}/activities`}>
+        <div class="grid gap-3 sm:grid-cols-[1fr_2fr]">
+          <div>
+            <label for="activity-channel" class="text-sm font-medium text-ink">Canal</label>
+            <select
+              id="activity-channel"
+              name="channel"
+              required
+              class="mt-2 h-9 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+            >
+              {CONTACT_CHANNELS.map((ch) => (
+                <option value={ch} selected={ch === (lead.preferredChannel ?? 'WHATSAPP')}>
+                  {channelLabel[ch]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="activity-body" class="text-sm font-medium text-ink">Qué pasó</label>
+            <input
+              id="activity-body"
+              name="body"
+              required
+              class="mt-2 h-9 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+              placeholder="Ej. Envié propuesta por WhatsApp"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="rounded-md bg-deep px-4 py-2 text-sm font-semibold text-white hover:brightness-110"
+        >
+          Guardar contacto
+        </button>
+      </form>
+    </section>
+
+    <section class="rounded-xl border border-line bg-paper p-6">
+      <h2 class="font-display text-lg font-medium text-ink">Historial</h2>
+      <form class="mt-4 space-y-3" method="POST" action={`/api/admin/leads/${lead.id}/notes`}>
+        <div>
+          <label for="body" class="text-sm font-medium text-ink">Nota interna</label>
+          <textarea
+            id="body"
+            name="body"
+            required
+            rows="3"
+            placeholder="Agregar nota interna…"
+            class="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2 text-sm outline-none focus:border-deep"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="rounded-md border border-line px-4 py-2 text-sm font-medium text-ink hover:border-deep/40"
+        >
+          Guardar nota
+        </button>
+      </form>
+
+      <ul class="mt-6 space-y-4">
+        {
+          timeline.length === 0 ? (
+            <li class="text-sm text-ink-muted">Sin actividad todavía.</li>
+          ) : (
+            timeline.map((item) => (
+              <li class="border-l-2 border-bright pl-3">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-medium text-deep">
+                    {item.kind === 'activity' ? item.channel : 'Nota'}
+                  </span>
+                  <p class="text-xs text-ink-faint">{item.at.toLocaleString('es-MX')}</p>
+                </div>
+                <p class="mt-1 whitespace-pre-wrap text-sm">{item.body}</p>
+              </li>
+            ))
+          )
+        }
+      </ul>
+    </section>
+  </div>
+</AdminLayout>

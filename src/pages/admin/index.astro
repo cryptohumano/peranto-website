@@ -1,0 +1,317 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import {
+  channelLabel,
+  countLeads,
+  getLeadStats,
+  listLeads,
+  statusLabel,
+  whatsappHref,
+} from '../../lib/leads';
+import type { LeadSource, LeadStatus } from '../../../generated/prisma/client';
+
+export const prerender = false;
+
+const statuses = [
+  'NEW',
+  'QUALIFIED',
+  'CONTACTED',
+  'MEETING',
+  'PROPOSAL',
+  'WON',
+  'LOST',
+] as const;
+const sources = ['CONTACT', 'NEWSLETTER', 'MANUAL'] as const;
+const interests = [
+  'criteria',
+  'lumo',
+  'research',
+  'support',
+  'identity',
+  'otro',
+] as const;
+
+const statusParam = Astro.url.searchParams.get('status');
+const sourceParam = Astro.url.searchParams.get('source');
+const interestParam = Astro.url.searchParams.get('interest');
+const q = Astro.url.searchParams.get('q')?.trim() || '';
+
+const status = statuses.includes(statusParam as LeadStatus)
+  ? (statusParam as LeadStatus)
+  : undefined;
+const source = sources.includes(sourceParam as LeadSource)
+  ? (sourceParam as LeadSource)
+  : undefined;
+const interest = interests.includes(interestParam as (typeof interests)[number])
+  ? (interestParam as string)
+  : undefined;
+
+const filters = { status, source, interest, q: q || undefined };
+
+let leads: Awaited<ReturnType<typeof listLeads>> = [];
+let matched = 0;
+let stats: Awaited<ReturnType<typeof getLeadStats>> = { total: 0, byStatus: [], recent: 0 };
+let dbError: string | null = null;
+
+try {
+  [leads, matched, stats] = await Promise.all([
+    listLeads(filters),
+    countLeads(filters),
+    getLeadStats(),
+  ]);
+} catch (error) {
+  dbError = error instanceof Error ? error.message : String(error);
+  console.error('Admin leads query failed', dbError);
+}
+
+const sourceLabel: Record<string, string> = {
+  CONTACT: 'Contacto',
+  NEWSLETTER: 'Newsletter',
+  MANUAL: 'Manual',
+};
+
+const interestLabel: Record<string, string> = {
+  criteria: 'CriterIA',
+  lumo: 'Lumo',
+  research: 'Investigación',
+  support: 'Apoyo',
+  identity: 'Identidad',
+  otro: 'Otro',
+};
+
+function hrefWith(overrides: Record<string, string | undefined>) {
+  const params = new URLSearchParams();
+  const next = {
+    q: q || undefined,
+    status,
+    source,
+    interest,
+    ...overrides,
+  };
+  for (const [key, value] of Object.entries(next)) {
+    if (value) params.set(key, value);
+  }
+  const qs = params.toString();
+  return qs ? `/admin?${qs}` : '/admin';
+}
+
+const hasActiveFilters = Boolean(q || status || source || interest);
+const chipClass = (active: boolean) =>
+  active
+    ? 'rounded-md bg-deep px-3 py-1.5 text-sm font-medium text-white'
+    : 'rounded-md border border-line bg-paper px-3 py-1.5 text-sm text-ink-muted hover:border-deep/40 hover:text-ink';
+---
+
+<AdminLayout title="Leads">
+  <div class="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
+    <div>
+      <h1 class="font-display text-2xl font-medium text-ink">Leads</h1>
+      <p class="mt-1 text-sm text-ink-muted">Contactos y oportunidades del sitio.</p>
+    </div>
+
+    {
+      Astro.url.searchParams.get('deleted') === '1' && (
+        <p class="rounded-md border border-bright/40 bg-accent-soft px-4 py-3 text-sm text-ink">
+          Lead eliminado.
+        </p>
+      )
+    }
+    {
+      dbError && (
+        <p class="rounded-md border border-line bg-paper-dark/70 px-4 py-3 text-sm text-ink">
+          No se pudo leer la base de datos. Revisa <code class="font-mono text-xs">DATABASE_URL</code> y{' '}
+          <a class="text-deep underline" href="/api/health">/api/health</a>.
+          <span class="mt-1 block font-mono text-xs opacity-80">{dbError}</span>
+        </p>
+      )
+    }
+
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div class="rounded-xl border border-line bg-paper p-5">
+        <p class="text-xs font-medium uppercase tracking-wider text-ink-faint">Total</p>
+        <p class="mt-2 font-display text-3xl font-medium text-ink">{stats.total}</p>
+      </div>
+      <div class="rounded-xl border border-line bg-paper p-5">
+        <p class="text-xs font-medium uppercase tracking-wider text-ink-faint">Últimos 7 días</p>
+        <p class="mt-2 font-display text-3xl font-medium text-ink">{stats.recent}</p>
+      </div>
+      <div class="rounded-xl border border-line bg-paper p-5">
+        <p class="text-xs font-medium uppercase tracking-wider text-ink-faint">
+          {hasActiveFilters ? 'Resultados' : 'Nuevos'}
+        </p>
+        <p class="mt-2 font-display text-3xl font-medium text-ink">
+          {
+            hasActiveFilters
+              ? matched
+              : (stats.byStatus.find((s) => s.status === 'NEW')?._count._all ?? 0)
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-4 rounded-xl border border-line bg-paper p-5">
+      <form method="GET" action="/admin" class="grid gap-4 md:grid-cols-[1.4fr_1fr_1fr_auto]">
+        <div>
+          <label for="q" class="text-sm font-medium text-ink">Buscar</label>
+          <input
+            id="q"
+            name="q"
+            value={q}
+            placeholder="Nombre, email, organización…"
+            class="mt-2 h-10 w-full rounded-md border border-line bg-paper px-3 text-sm outline-none focus:border-deep"
+          />
+        </div>
+        <div>
+          <label for="source" class="text-sm font-medium text-ink">Origen</label>
+          <select
+            id="source"
+            name="source"
+            class="mt-2 h-10 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+          >
+            <option value="">Todos</option>
+            {sources.map((value) => (
+              <option value={value} selected={source === value}>
+                {sourceLabel[value]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for="interest" class="text-sm font-medium text-ink">Interés</label>
+          <select
+            id="interest"
+            name="interest"
+            class="mt-2 h-10 w-full rounded-md border border-line bg-paper px-2.5 text-sm outline-none focus:border-deep"
+          >
+            <option value="">Todos</option>
+            {interests.map((value) => (
+              <option value={value} selected={interest === value}>
+                {interestLabel[value]}
+              </option>
+            ))}
+          </select>
+        </div>
+        {status && <input type="hidden" name="status" value={status} />}
+        <div class="flex items-end gap-2">
+          <button
+            type="submit"
+            class="h-10 rounded-md bg-deep px-4 text-sm font-semibold text-white hover:brightness-110"
+          >
+            Filtrar
+          </button>
+          {
+            hasActiveFilters && (
+              <a
+                href="/admin"
+                class="inline-flex h-10 items-center rounded-md border border-line px-4 text-sm text-ink-muted hover:border-deep/40"
+              >
+                Limpiar
+              </a>
+            )
+          }
+        </div>
+      </form>
+
+      <div class="flex flex-wrap gap-2">
+        <a href={hrefWith({ status: undefined })} class={chipClass(!status)}>Todos</a>
+        {
+          Object.entries(statusLabel).map(([key, label]) => (
+            <a href={hrefWith({ status: key })} class={chipClass(status === key)}>
+              {label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-xl border border-line bg-paper">
+      <table class="w-full min-w-[720px] text-left text-sm">
+        <thead class="border-b border-line bg-paper-dark/40 text-xs uppercase tracking-wider text-ink-faint">
+          <tr>
+            <th class="px-4 py-3 font-medium">Lead</th>
+            <th class="px-4 py-3 font-medium">Tel / WA</th>
+            <th class="px-4 py-3 font-medium">Origen</th>
+            <th class="px-4 py-3 font-medium">Interés</th>
+            <th class="px-4 py-3 font-medium">Estado</th>
+            <th class="px-4 py-3 font-medium">Fecha</th>
+            <th class="px-4 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            leads.length === 0 ? (
+              <tr>
+                <td colspan="7" class="px-4 py-8 text-ink-muted">
+                  {hasActiveFilters ? 'No hay leads con estos filtros.' : 'Aún no hay leads.'}
+                </td>
+              </tr>
+            ) : (
+              leads.map((lead) => {
+                const wa = whatsappHref(lead.phone);
+                return (
+                  <tr class="border-b border-line/70 last:border-0">
+                    <td class="px-4 py-3">
+                      <a href={`/admin/leads/${lead.id}`} class="font-medium text-deep hover:underline">
+                        {lead.name || lead.email}
+                      </a>
+                      <p class="text-xs text-ink-faint">{lead.email}</p>
+                      {lead.preferredChannel && (
+                        <p class="text-xs text-ink-faint">
+                          Prefiere: {channelLabel[lead.preferredChannel]}
+                        </p>
+                      )}
+                    </td>
+                    <td class="px-4 py-3">
+                      {lead.phone ? (
+                        wa ? (
+                          <a
+                            href={wa}
+                            class="font-medium text-deep hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {lead.phone}
+                          </a>
+                        ) : (
+                          lead.phone
+                        )
+                      ) : (
+                        '—'
+                      )}
+                    </td>
+                    <td class="px-4 py-3">{sourceLabel[lead.source] ?? lead.source}</td>
+                    <td class="px-4 py-3">
+                      {lead.interest ? (interestLabel[lead.interest] ?? lead.interest) : '—'}
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-deep">
+                        {statusLabel[lead.status] ?? lead.status}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-ink-faint">
+                      {lead.createdAt.toLocaleString('es-MX')}
+                    </td>
+                    <td class="px-4 py-3">
+                      <form
+                        method="POST"
+                        action={`/api/admin/leads/${lead.id}/delete`}
+                        onsubmit="return confirm('¿Eliminar este lead? Se borrarán notas y actividades.');"
+                      >
+                        <button
+                          type="submit"
+                          class="text-xs font-medium text-ink-faint hover:text-ink"
+                        >
+                          Eliminar
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                );
+              })
+            )
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

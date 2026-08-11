@@ -3,29 +3,15 @@ import SectionLabel from './SectionLabel.astro';
 import type { Lang, UIKey } from '../i18n/ui';
 import { useTranslations } from '../i18n/ui';
 import { siteConfig } from '../config/site';
+import { buildContactHref } from '../lib/contact-intent';
 
 interface Props {
   lang: Lang;
 }
-
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const criteriaUrl = 'https://criteria.peranto.app';
-
-const mailSubject = (topic: 'research' | 'support') => {
-  const subjects =
-    lang === 'es'
-      ? {
-          research: 'Peranto — colaboración en investigación',
-          support: 'Peranto — apoyo o financiamiento',
-        }
-      : {
-          research: 'Peranto — research collaboration',
-          support: 'Peranto — funding or patronage',
-        };
-  return subjects[topic];
-};
 
 type PathCard = {
   titleKey: UIKey;
@@ -58,15 +44,25 @@ const paths: PathCard[] = [
     ctaKey: 'collaborate.path.research.cta',
     href: '#investigacion',
     secondaryKey: 'collaborate.path.research.secondary',
-    secondaryHref: `mailto:${siteConfig.email}?subject=${encodeURIComponent(mailSubject('research'))}`,
+    secondaryHref: buildContactHref(lang, {
+      interest: 'research',
+      topic: lang === 'es' ? 'Colaboración en investigación' : 'Research collaboration',
+      ref: 'collaborate-research',
+      path: `/${lang}/#colaborar`,
+    }),
     trackPrimary: 'CTA Collaborate Research',
-    trackSecondary: 'CTA Collaborate Research Email',
+    trackSecondary: 'CTA Collaborate Research Contact',
   },
   {
     titleKey: 'collaborate.path.support.title',
     descKey: 'collaborate.path.support.desc',
     ctaKey: 'collaborate.path.support.cta',
-    href: `mailto:${siteConfig.email}?subject=${encodeURIComponent(mailSubject('support'))}`,
+    href: buildContactHref(lang, {
+      interest: 'support',
+      topic: lang === 'es' ? 'Apoyo o financiamiento' : 'Funding or patronage',
+      ref: 'collaborate-support',
+      path: `/${lang}/#colaborar`,
+    }),
     secondaryKey: 'collaborate.path.support.secondary',
     secondaryHref: siteConfig.ghostUrl,
     secondaryExternal: true,
@@ -122,6 +118,10 @@ const paths: PathCard[] = [
 
       <p class="mt-10 max-w-2xl text-sm leading-relaxed text-ink-faint">
         {t('collaborate.footer')}
+        {' '}
+        <a href={buildContactHref(lang)} class="font-medium text-deep link-underline">
+          {lang === 'es' ? 'Formulario de contacto' : 'Contact form'}
+        </a>
       </p>
     </div>
   </div>

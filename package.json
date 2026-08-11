@@ -9,20 +9,36 @@
     "predev": "node scripts/check-node.mjs",
     "prebuild": "node scripts/check-node.mjs",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "prisma generate && astro build",
     "preview": "astro preview",
-    "start": "serve dist -s -l tcp://0.0.0.0:${PORT:-4321}",
+    "start": "sh ./scripts/start.sh",
     "astro": "astro",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
     "plausible:up": "docker compose -f plausible/compose.yml --project-directory plausible up -d",
     "plausible:down": "docker compose -f plausible/compose.yml --project-directory plausible down",
     "plausible:logs": "docker compose -f plausible/compose.yml --project-directory plausible logs -f plausible"
   },
   "dependencies": {
+    "@astrojs/node": "^10.1.4",
     "@astrojs/sitemap": "^3.7.2",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
     "@tailwindcss/vite": "^4.3.0",
-    "astro": "^6.3.3",
-    "serve": "^14.2.6",
+    "astro": "^6.4.8",
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0",
+    "resend": "^6.18.1",
     "sharp": "^0.34.5",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "undici": "^8.9.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.2",
+    "prisma": "^7.9.1"
   }
 }

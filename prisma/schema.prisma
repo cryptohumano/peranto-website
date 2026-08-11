@@ -1,0 +1,99 @@
+// Prisma schema — leads / contact / newsletter (fase 1)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LeadSource {
+  CONTACT
+  NEWSLETTER
+  MANUAL
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONTACTED
+  MEETING
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum ContactChannel {
+  EMAIL
+  WHATSAPP
+  PHONE
+  OTHER
+}
+
+model Lead {
+  id                 String          @id @default(cuid())
+  name               String?
+  email              String
+  company            String?
+  phone              String?
+  interest           String?
+  message            String?
+  source             LeadSource
+  status             LeadStatus      @default(NEW)
+  preferredChannel   ContactChannel?
+  lastContactedAt    DateTime?
+  lastContactChannel ContactChannel?
+  assignee           String?
+  notes              LeadNote[]
+  activities         LeadActivity[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+  @@index([phone])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+}
+
+model LeadActivity {
+  id        String         @id @default(cuid())
+  leadId    String
+  lead      Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  channel   ContactChannel
+  body      String
+  createdAt DateTime       @default(now())
+
+  @@index([leadId])
+  @@index([createdAt])
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model NewsletterSubscriber {
+  id            String           @id @default(cuid())
+  email         String           @unique
+  status        SubscriberStatus @default(ACTIVE)
+  source        String           @default("web")
+  ghostMemberId String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

@@ -1,0 +1,62 @@
+---
+import AdminAuthLayout from '../../layouts/AdminAuthLayout.astro';
+
+export const prerender = false;
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<AdminAuthLayout title="Login">
+  <main class="flex min-h-screen items-center justify-center px-5 py-12">
+    <div class="w-full max-w-md rounded-2xl border border-line bg-paper p-8 shadow-sm">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-deep">Peranto CRM</p>
+      <h1 class="mt-3 font-display text-3xl font-medium text-ink">Acceso admin</h1>
+      <p class="mt-2 text-sm text-ink-muted">
+        Gestiona leads, etapas y notas de contacto.
+      </p>
+
+      {
+        error === 'config' && (
+          <p class="mt-5 rounded-md border border-line bg-paper-dark/70 px-3 py-2 text-sm text-ink">
+            Falta configurar <code class="font-mono text-xs">ADMIN_PASSWORD</code> y{' '}
+            <code class="font-mono text-xs">ADMIN_SECRET</code>.
+          </p>
+        )
+      }
+      {
+        error === '1' && (
+          <p class="mt-5 rounded-md border border-line bg-paper-dark/70 px-3 py-2 text-sm text-ink">
+            Contraseña incorrecta.
+          </p>
+        )
+      }
+      {
+        error === 'rate' && (
+          <p class="mt-5 rounded-md border border-line bg-paper-dark/70 px-3 py-2 text-sm text-ink">
+            Demasiados intentos. Espera unos minutos e inténtalo de nuevo.
+          </p>
+        )
+      }
+
+      <form method="POST" action="/api/admin/login" class="mt-6 space-y-5">
+        <div>
+          <label for="password" class="text-sm font-medium text-ink">Contraseña</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+            class="mt-2 h-11 w-full rounded-md border border-line bg-paper px-4 text-sm outline-none focus:border-deep"
+          />
+        </div>
+        <button
+          type="submit"
+          class="inline-flex h-11 w-full items-center justify-center rounded-md bg-gradient-to-r from-deep to-bright text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+        >
+          Entrar
+        </button>
+      </form>
+    </div>
+  </main>
+</AdminAuthLayout>

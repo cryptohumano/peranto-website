@@ -1,74 +1,87 @@
 # Desplegar Peranto en Railway
 
-Un **proyecto Railway** con **dos bloques** (no un solo contenedor):
+Un **proyecto Railway** con **tres bloques**:
 
 | Servicio | Qué es | Origen |
 |----------|--------|--------|
-| **landing** | Sitio Astro (`peranto.app`) | Este repo, raíz del proyecto |
-| **plausible** | Analytics (`analytics.peranto.app`) | [Plantilla oficial Railway](https://railway.com/template/mzYEXO) |
+| **landing** | Astro SSR Node (`peranto.app`) | Este repo, raíz |
+| **Postgres** | Leads / contacto | Plugin Railway Postgres |
+| **plausible** | Analytics (`analytics.peranto.app`) | [Plantilla oficial](https://railway.com/template/mzYEXO) |
 
-Ghost (`learn.peranto.app`), CriterIA y Yohualli siguen en sus URLs actuales; solo la landing y Plausible viven aquí.
+Ghost (`learn.peranto.app`), CriterIA y Yohualli siguen en sus URLs actuales.
+
+> **Nota:** GitHub Pages ya no sirve para producción si usas formularios/Telegram (necesitan Node). Usa Railway (o un VPS) como host principal.
 
 ---
 
-## 1. Landing (este repositorio)
+## 1. Landing SSR (este repositorio)
 
 ### Crear el servicio
 
 1. [Railway](https://railway.app) → **New Project** → **Deploy from GitHub** → `landing-peranto`.
-2. **Settings → Root Directory**: vacío o `/` (no `plausible/`).
-3. **Variables** (pestaña del servicio landing):
+2. **Add Postgres** (plugin) al mismo proyecto.
+3. **Settings → Root Directory**: vacío o `/` (no `plausible/`).
+4. **Variables** (servicio landing):
 
 | Variable | Ejemplo |
 |----------|---------|
+| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` (red privada) |
+| `SITE_URL` | `https://peranto.app` |
+| `PUBLIC_SITE_URL` | `https://peranto.app` |
+| `CONTACT_TO_EMAIL` | `outreach@peranto.app` |
+| `CONTACT_FROM_EMAIL` | `Peranto Web <onboarding@resend.dev>` |
+| `RESEND_API_KEY` | (opcional) |
+| `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` | … |
+| `TELEGRAM_WEBHOOK_SECRET` | … |
+| `ADMIN_PASSWORD` | password del panel `/admin` |
+| `ADMIN_SECRET` | string largo aleatorio (firma cookie) |
 | `PUBLIC_GHOST_URL` | `https://learn.peranto.app` |
 | `GHOST_CONTENT_API_KEY` | tu key Ghost |
 | `PUBLIC_ANALYTICS_PROVIDER` | `plausible` |
 | `PUBLIC_PLAUSIBLE_DOMAIN` | `peranto.app` |
-| `PUBLIC_PLAUSIBLE_SCRIPT_URL` | `https://TU-PLAUSIBLE.up.railway.app/js/script.outbound-links.tagged-events.js` |
-| `PUBLIC_GOOGLE_SITE_VERIFICATION` | (opcional) |
+| `PUBLIC_PLAUSIBLE_SCRIPT_URL` | `https://analytics.peranto.app/js/script.outbound-links.tagged-events.js` |
 
-4. **Settings → Networking** → **Generate Domain** (ej. `landing-peranto.up.railway.app`).
-5. **Custom Domain** → `peranto.app` y `www.peranto.app` (CNAME al dominio Railway).
-6. Build: Nixpacks usa `railway.toml` (`npm run build` + `npm run start` con `serve`).
+5. **Settings → Networking** → **Generate Domain** + custom `peranto.app` / `www.peranto.app`.
+6. Build/start: `railway.toml` → `npm run build` + `scripts/start.sh` (migrate + `dist/server/entry.mjs`).
+
+### Telegram webhook (post-deploy)
+
+```bash
+curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
+  -d "url=https://peranto.app/api/telegram/webhook" \
+  -d "secret_token=$TELEGRAM_WEBHOOK_SECRET"
+```
 
 ### Probar en local como Railway
 
 ```bash
+cp .env.example .env
+npm run db:up
+npx prisma migrate deploy
 npm run build
 PORT=8080 npm run start
 ```
+
+Health: `GET /api/health`
+
+Ver también [docs/DATABASE.md](./docs/DATABASE.md).
 
 ---
 
 ## 2. Plausible (plantilla Railway, mismo proyecto)
 
-El `docker-compose` en `/plausible` sirve para **VPS local**; en Railway usa la plantilla mantenida por Railway (Postgres + ClickHouse + Plausible).
+El `docker-compose` en `/plausible` sirve para **VPS local**; en Railway usa la plantilla mantenida por Railway.
 
-1. En el **mismo proyecto** Railway → **Add service** → **Deploy template**.
-2. Busca **Plausible Analytics** o abre:  
-   [https://railway.com/template/mzYEXO](https://railway.com/template/mzYEXO)
-3. Completa variables (Railway genera secretos de DB).
-4. Cuando esté arriba, abre la URL del servicio Plausible → crea tu usuario admin.
-5. Añade el sitio **`peranto.app`** en el panel.
-6. Pon **`DISABLE_REGISTRATION=true`** en las variables del servicio Plausible y redeploy.
-7. **Custom domain** → `analytics.peranto.app` (opcional pero recomendado).
-8. Copia la URL pública y actualiza en el servicio **landing**:
-
-```env
-PUBLIC_PLAUSIBLE_SCRIPT_URL=https://analytics.peranto.app/js/script.outbound-links.tagged-events.js
-```
-
-(Usa la URL `.up.railway.app` hasta tener el dominio propio.)
+1. En el **mismo proyecto** Railway → **Add service** → **Deploy template** → [Plausible](https://railway.com/template/mzYEXO).
+2. Crea usuario admin, añade sitio `peranto.app`, `DISABLE_REGISTRATION=true`.
+3. Custom domain `analytics.peranto.app` y actualiza `PUBLIC_PLAUSIBLE_SCRIPT_URL` en landing.
 
 ---
 
 ## 3. Coste y recursos
 
-- **Landing**: poco consumo (sitio estático servido con Node + `serve`).
-- **Plausible**: ~3 servicios (app + Postgres + ClickHouse); Railway cobra por uso; prevé **varios USD/mes** según tráfico (más si hay muchas pageviews).
-
-ClickHouse en Railway no usa el `compose.yml` del repo; la plantilla ya trae la config ajustada.
+- **Landing SSR**: Node + Postgres (leads); bajo tráfico ≈ pocos USD/mes.
+- **Plausible**: app + Postgres + ClickHouse; varios USD/mes según pageviews.
 
 ---
 
@@ -76,25 +89,25 @@ ClickHouse en Railway no usa el `compose.yml` del repo; la plantilla ya trae la 
 
 | Componente | Dónde |
 |------------|--------|
-| CMS Ghost | `learn.peranto.app` (aparte) |
+| CMS Ghost | `learn.peranto.app` |
 | CriterIA | `criteria.peranto.app` |
-| Yohualli demo | `yohualli.up.railway.app` (otro servicio/repo) |
-| `plausible/` docker-compose | Solo desarrollo local o VPS |
+| Yohualli demo | otro servicio/repo |
+| `plausible/` compose | Solo local/VPS |
 
 ---
 
 ## 5. Checklist post-deploy
 
-- [ ] `https://peranto.app` → redirige a `/es/`
-- [ ] `/en/` y `/es/` cargan
-- [ ] Script Plausible en el HTML (view source → `script.outbound-links`)
-- [ ] Panel Plausible recibe visitas de prueba
-- [ ] Eventos custom (`Project Panel`, `CTA Demo`) en **Goals/Events** de Plausible
+- [ ] `https://peranto.app` → `/es/`
+- [ ] `/es/contacto` y `/en/contacto` envían lead (Telegram o Resend)
+- [ ] `GET /api/health` → `ok: true`
+- [ ] Webhook Telegram responde; `/resumen` en chat autorizado
+- [ ] Plausible recibe visitas
 
 ---
 
 ## Referencias
 
 - [Astro on Railway](https://docs.astro.build/en/guides/deploy/railway/)
-- [Plausible template Railway](https://github.com/railwayapp-templates/plausible)
-- [Plausible CE (self-host VPS)](plausible/README.md)
+- [docs/DATABASE.md](./docs/DATABASE.md)
+- [docs/AGENT-FORMS-TELEGRAM.md](./docs/AGENT-FORMS-TELEGRAM.md)
