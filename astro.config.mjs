@@ -32,6 +32,8 @@ export default defineConfig({
   redirects: {
     '/': '/es/',
     // Atajos estables para Chrome Web Store / AMO
+    '/aura': '/es/aura/',
+    '/aura/': '/es/aura/',
     '/aura/privacidad': '/es/aura/privacidad',
     '/aura/privacy': '/en/aura/privacy',
   },
@@ -54,6 +56,10 @@ export default defineConfig({
           path === '/en/contacto' ||
           path === '/es/contacto/' ||
           path === '/en/contacto/' ||
+          path === '/es/aura' ||
+          path === '/en/aura' ||
+          path === '/es/aura/' ||
+          path === '/en/aura/' ||
           path === '/es/aura/privacidad' ||
           path === '/en/aura/privacy' ||
           path === '/es/aura/privacidad/' ||

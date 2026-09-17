@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isEs = lang === 'es';
+const altPath = isEs ? '/en/aura/' : '/es/aura/';
+const privacyHref = isEs ? '/es/aura/privacidad/' : '/en/aura/privacy/';
+const contactHref = `/${lang}/contacto/`;
+
+const title = isEs ? 'Aura Wallet — identidad did:peranto' : 'Aura Wallet — did:peranto identity';
+const description = isEs
+  ? 'Extensión de navegador para identidad did:peranto: credenciales verificables, vault cifrado y firmas en Polkadot y EVM.'
+  : 'Browser extension for did:peranto identity: verifiable credentials, encrypted vault, and signing on Polkadot and EVM.';
+
+const features = isEs
+  ? [
+      {
+        title: 'Identidad did:peranto',
+        text: 'Crea o importa un mnemonic BIP39 y obtén DID, direcciones EVM y Substrate (sr25519 / ed25519).',
+      },
+      {
+        title: 'Vault cifrado',
+        text: 'Claves con AES-256-GCM y PBKDF2. Auto-lock por inactividad. Sin custodia ni servidores de Peranto.',
+      },
+      {
+        title: 'Credenciales verificables',
+        text: 'Guarda EcoTest, liveness, residencia u otras VC. Compártelas por atributos o con pruebas ZK.',
+      },
+      {
+        title: 'Dapps con DomainLinkage',
+        text: 'Solo sitios que demuestran controlar su DID pueden pedirte acceso; tú apruebas cada acción.',
+      },
+    ]
+  : [
+      {
+        title: 'did:peranto identity',
+        text: 'Create or import a BIP39 mnemonic and get a DID plus EVM and Substrate addresses (sr25519 / ed25519).',
+      },
+      {
+        title: 'Encrypted vault',
+        text: 'Keys with AES-256-GCM and PBKDF2. Idle auto-lock. No custody and no Peranto servers.',
+      },
+      {
+        title: 'Verifiable credentials',
+        text: 'Store EcoTest, liveness, residence and more. Share by claims or with ZK proofs.',
+      },
+      {
+        title: 'DomainLinkage dapps',
+        text: 'Only sites that prove they control their DID can request access; you approve every action.',
+      },
+    ];
+---
+
+<BaseLayout lang={lang} title={title} description={description} alternatePath={altPath}>
+  <Header lang={lang} />
+  <main>
+    <section class="border-b border-line bg-gradient-to-b from-accent-soft/60 to-paper py-16 sm:py-20">
+      <div class="section-width grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <div class="flex items-center gap-3">
+            <img
+              src="/aura/icon128.png"
+              alt=""
+              width="48"
+              height="48"
+              class="rounded-xl shadow-md"
+            />
+            <p class="font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
+              Aura Wallet
+            </p>
+          </div>
+          <h1 class="mt-5 font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+            {
+              isEs
+                ? 'Identidad did:peranto en tu navegador'
+                : 'did:peranto identity in your browser'
+            }
+          </h1>
+          <p class="mt-4 max-w-xl text-lg text-ink-muted">
+            {
+              isEs
+                ? 'Guarda credenciales verificables, compártelas por partes y firma en Polkadot (PVM) y EVM. Las claves no salen de tu dispositivo.'
+                : 'Store verifiable credentials, share them selectively, and sign on Polkadot (PVM) and EVM. Keys never leave your device.'
+            }
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a
+              href={contactHref}
+              class="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+            >
+              {isEs ? 'Contacto / soporte' : 'Contact / support'}
+            </a>
+            <a
+              href={privacyHref}
+              class="inline-flex items-center justify-center rounded-md border border-line bg-paper px-5 py-2.5 text-sm font-medium text-ink transition hover:bg-line/20"
+            >
+              {isEs ? 'Política de privacidad' : 'Privacy policy'}
+            </a>
+          </div>
+          <p class="mt-4 text-sm text-ink-faint">
+            {
+              isEs
+                ? 'Extensión para Chrome, Edge, Brave y Firefox. Pronto en las tiendas oficiales.'
+                : 'Extension for Chrome, Edge, Brave and Firefox. Coming soon to official stores.'
+            }
+          </p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-line bg-night shadow-xl">
+          <img
+            src="/aura/shot-home.png"
+            alt={isEs ? 'Captura de Aura Wallet — inicio' : 'Aura Wallet screenshot — home'}
+            width="1280"
+            height="800"
+            class="h-auto w-full"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-width py-16 sm:py-20">
+      <h2 class="font-display text-2xl text-ink sm:text-3xl">
+        {isEs ? 'Qué hace Aura' : 'What Aura does'}
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2">
+        {
+          features.map((f) => (
+            <article class="rounded-xl border border-line bg-paper-dark/30 p-5">
+              <h3 class="font-display text-lg text-ink">{f.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-muted">{f.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="border-y border-line bg-paper-dark/25 py-16 sm:py-20">
+      <div class="section-width grid items-center gap-10 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-2xl text-ink sm:text-3xl">
+            {isEs ? 'Seguridad possession-first' : 'Possession-first security'}
+          </h2>
+          <ul class="mt-5 space-y-3 text-sm text-ink-muted">
+            <li>
+              {
+                isEs
+                  ? '· Sin telemetría ni cuentas en la nube de Peranto'
+                  : '· No telemetry and no Peranto cloud accounts'
+              }
+            </li>
+            <li>
+              {
+                isEs
+                  ? '· Contraseña solo local: deriva la clave; nunca se guarda'
+                  : '· Password stays local: derives the key; never stored'
+              }
+            </li>
+            <li>
+              {
+                isEs
+                  ? '· Redes: Paseo Hub TestNet, Hardhat local, RPC configurable'
+                  : '· Networks: Paseo Hub TestNet, local Hardhat, configurable RPC'
+              }
+            </li>
+          </ul>
+          <p class="mt-6 text-sm text-ink-muted">
+            {isEs ? 'Privacidad:' : 'Privacy:'}{' '}
+            <a class="link-underline text-deep" href={privacyHref}>
+              {privacyHref.replace(/\/$/, '')}
+            </a>
+          </p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-line bg-night shadow-lg">
+          <img
+            src="/aura/shot-unlock.png"
+            alt={isEs ? 'Captura — vault bloqueado' : 'Screenshot — locked vault'}
+            width="1280"
+            height="800"
+            class="h-auto w-full"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-width py-16 text-center sm:py-20">
+      <h2 class="font-display text-2xl text-ink sm:text-3xl">
+        {isEs ? '¿Dudas o partnership?' : 'Questions or partnership?'}
+      </h2>
+      <p class="mx-auto mt-3 max-w-lg text-ink-muted">
+        {
+          isEs
+            ? 'Escríbenos desde la página de contacto. Usamos outreach@peranto.app.'
+            : 'Reach us via the contact page. We use outreach@peranto.app.'
+        }
+      </p>
+      <a
+        href={contactHref}
+        class="mt-6 inline-flex items-center justify-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+      >
+        {isEs ? 'Ir a contacto' : 'Go to contact'}
+      </a>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>
