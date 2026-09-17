@@ -48,6 +48,12 @@ const analyticsOn = isAnalyticsEnabled();
           {altLang === 'es' ? 'Español' : 'English'}
         </a>
         <a
+          href={lang === 'es' ? '/es/aura/privacidad' : '/en/aura/privacy'}
+          class="hover:text-ink"
+        >
+          {lang === 'es' ? 'Privacidad Aura' : 'Aura privacy'}
+        </a>
+        <a
           href={siteConfig.ghostUrl}
           class="hover:text-ink"
           target="_blank"
