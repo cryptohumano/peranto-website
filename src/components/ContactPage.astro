@@ -5,7 +5,6 @@ import Footer from './Footer.astro';
 import type { Lang } from '../i18n/ui';
 import { getAlternateLang, pathForLang, useTranslations } from '../i18n/ui';
 import { siteConfig } from '../config/site';
-import { parseContactPrefill } from '../lib/contact-intent';
 
 interface Props {
   lang: Lang;
@@ -14,11 +13,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const altLang = getAlternateLang(lang);
-
-const sent = Astro.url.searchParams.get('enviado') === '1';
-const error = Astro.url.searchParams.get('error');
-const prefill = parseContactPrefill(lang, Astro.url.searchParams);
-const hasContext = Boolean(prefill.topic);
+const altPath = `/${altLang}/contacto`;
+const supportEmail = siteConfig.email;
 
 const interestOptions =
   lang === 'es'
@@ -38,12 +34,27 @@ const interestOptions =
         { value: 'identity', label: 'Identity / AuraDID' },
         { value: 'otro', label: 'Other' },
       ];
+
+const copy =
+  lang === 'es'
+    ? {
+        prefillPrefix: 'Prellenamos el formulario con el contexto de',
+        mailtoSubject: 'Contacto desde peranto.app',
+        mailtoFail:
+          'No pudimos abrir tu cliente de correo. Escríbenos a ' + supportEmail,
+      }
+    : {
+        prefillPrefix: 'We prefilled the form with context from',
+        mailtoSubject: 'Contact from peranto.app',
+        mailtoFail: 'Could not open your email client. Write to ' + supportEmail,
+      };
 ---
 
 <BaseLayout
   lang={lang}
   title={t('contact.meta.title')}
   description={t('contact.meta.description')}
+  alternatePath={altPath}
 >
   <Header lang={lang} />
   <main>
@@ -56,48 +67,51 @@ const interestOptions =
     </section>
 
     <section class="section-width grid gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr]">
-      {
-        sent && (
-          <p class="lg:col-span-2 rounded-md border border-bright/40 bg-accent-soft px-4 py-3 text-sm text-ink">
-            {t('contact.success')}
-          </p>
-        )
-      }
-      {
-        error === 'missing' && (
-          <p class="lg:col-span-2 rounded-md border border-line bg-paper-dark/60 px-4 py-3 text-sm text-ink">
-            {t('contact.error.missing')}
-          </p>
-        )
-      }
-      {
-        (error === 'db' || error === 'send') && (
-          <p class="lg:col-span-2 rounded-md border border-line bg-paper-dark/60 px-4 py-3 text-sm text-ink">
-            {t('contact.error.db')} {siteConfig.email}
-          </p>
-        )
-      }
-      {
-        error && error !== 'missing' && error !== 'db' && error !== 'send' && (
-          <p class="lg:col-span-2 rounded-md border border-line bg-paper-dark/60 px-4 py-3 text-sm text-ink">
-            {t('contact.error.generic')} {siteConfig.email}
-          </p>
-        )
-      }
-      {
-        hasContext && !sent && (
-          <p class="lg:col-span-2 rounded-md border border-line bg-accent-soft/40 px-4 py-3 text-sm text-ink">
-            {t('contact.prefill')}
-            <strong class="font-semibold"> «{prefill.topic}»</strong>.
-          </p>
-        )
-      }
+      <p
+        id="contact-success"
+        hidden
+        class="lg:col-span-2 rounded-md border border-bright/40 bg-accent-soft px-4 py-3 text-sm text-ink"
+      >
+        {t('contact.success')}
+      </p>
+      <p
+        id="contact-error-missing"
+        hidden
+        class="lg:col-span-2 rounded-md border border-line bg-paper-dark/60 px-4 py-3 text-sm text-ink"
+      >
+        {t('contact.error.missing')}
+      </p>
+      <p
+        id="contact-error-generic"
+        hidden
+        class="lg:col-span-2 rounded-md border border-line bg-paper-dark/60 px-4 py-3 text-sm text-ink"
+      >
+        {t('contact.error.generic')}{' '}
+        <a class="link-underline text-deep" href={`mailto:${supportEmail}`}>{supportEmail}</a>
+      </p>
+      <p
+        id="contact-prefill"
+        hidden
+        class="lg:col-span-2 rounded-md border border-line bg-accent-soft/40 px-4 py-3 text-sm text-ink"
+      >
+        {copy.prefillPrefix}
+        <strong id="contact-prefill-topic" class="font-semibold"></strong>.
+      </p>
 
-      <form class="space-y-5" method="POST" action="/api/contact">
+      <form
+        id="contact-form"
+        class="space-y-5"
+        method="POST"
+        action="/api/contact"
+        data-lang={lang}
+        data-email={supportEmail}
+        data-subject={copy.mailtoSubject}
+        data-mailto-fail={copy.mailtoFail}
+      >
         <input type="hidden" name="lang" value={lang} />
-        {prefill.ref && <input type="hidden" name="ref" value={prefill.ref} />}
-        {prefill.path && <input type="hidden" name="sourcePath" value={prefill.path} />}
-        {prefill.topic && <input type="hidden" name="topic" value={prefill.topic} />}
+        <input type="hidden" name="ref" id="contact-ref" value="" />
+        <input type="hidden" name="sourcePath" id="contact-path" value="" />
+        <input type="hidden" name="topic" id="contact-topic" value="" />
 
         <div class="grid gap-5 sm:grid-cols-2">
           <div>
@@ -170,9 +184,7 @@ const interestOptions =
             <option value="">{t('contact.interest.placeholder')}</option>
             {
               interestOptions.map((opt) => (
-                <option value={opt.value} selected={prefill.interest === opt.value}>
-                  {opt.label}
-                </option>
+                <option value={opt.value}>{opt.label}</option>
               ))
             }
           </select>
@@ -186,7 +198,7 @@ const interestOptions =
             rows="7"
             required
             class="mt-2 w-full rounded-md border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-deep"
-          >{prefill.message}</textarea>
+          ></textarea>
         </div>
 
         <button
@@ -204,8 +216,8 @@ const interestOptions =
           <h2 class="font-display text-lg font-medium text-ink">{t('contact.aside.title')}</h2>
           <ul class="mt-4 space-y-2 text-sm text-ink-muted">
             <li>
-              <a class="link-underline text-deep" href={`mailto:${siteConfig.email}`}>
-                {siteConfig.email}
+              <a class="link-underline text-deep" href={`mailto:${supportEmail}`}>
+                {supportEmail}
               </a>
             </li>
             <li>
@@ -216,7 +228,7 @@ const interestOptions =
             <li>
               <a
                 class="link-underline text-deep"
-                href={`/${altLang}/contacto`}
+                href={`/${altLang}/contacto/`}
                 hreflang={altLang}
               >
                 {t('lang.switch')}
@@ -229,4 +241,127 @@ const interestOptions =
     </section>
   </main>
   <Footer lang={lang} />
+
+  <script is:inline>
+    (function () {
+      var form = document.getElementById('contact-form');
+      if (!form) return;
+
+      var params = new URLSearchParams(window.location.search);
+      var lang = form.getAttribute('data-lang') || 'es';
+      var supportEmail = form.getAttribute('data-email') || '';
+      var subject = form.getAttribute('data-subject') || 'Contact';
+      var mailtoFail = form.getAttribute('data-mailto-fail') || '';
+
+      function show(id) {
+        var el = document.getElementById(id);
+        if (el) el.hidden = false;
+      }
+
+      if (params.get('enviado') === '1') show('contact-success');
+      if (params.get('error') === 'missing') show('contact-error-missing');
+      if (params.get('error') && params.get('error') !== 'missing') show('contact-error-generic');
+
+      var topic = (params.get('topic') || '').trim();
+      var ref = (params.get('ref') || '').trim();
+      var path = (params.get('path') || '').trim();
+      var interest = (params.get('interest') || '').trim();
+
+      if (topic) {
+        var topicInput = document.getElementById('contact-topic');
+        var topicLabel = document.getElementById('contact-prefill-topic');
+        if (topicInput) topicInput.value = topic;
+        if (topicLabel) topicLabel.textContent = ' «' + topic + '»';
+        show('contact-prefill');
+        var msg = document.getElementById('message');
+        if (msg && !msg.value) {
+          if (lang === 'en') {
+            msg.value =
+              'Hello — I was looking at «' +
+              topic +
+              '» on Peranto and would like to connect.\n\nSpecifically, I\'d like to talk about: ' +
+              (path ? '\n\nPage: ' + path : '');
+          } else {
+            msg.value =
+              'Hola — estaba revisando «' +
+              topic +
+              '» en Peranto y me interesa conectar.\n\nEn concreto, me gustaría hablar sobre: ' +
+              (path ? '\n\nPágina: ' + path : '');
+          }
+        }
+      }
+      if (ref) {
+        var refInput = document.getElementById('contact-ref');
+        if (refInput) refInput.value = ref;
+      }
+      if (path) {
+        var pathInput = document.getElementById('contact-path');
+        if (pathInput) pathInput.value = path;
+      }
+      if (interest) {
+        var interestEl = document.getElementById('interest');
+        if (interestEl) interestEl.value = interest;
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var data = new FormData(form);
+        var name = String(data.get('name') || '').trim();
+        var email = String(data.get('email') || '').trim();
+        var phone = String(data.get('phone') || '').trim();
+        var message = String(data.get('message') || '').trim();
+        if (!name || !email || !phone || !message) {
+          show('contact-error-missing');
+          return;
+        }
+
+        var body =
+          'Nombre: ' +
+          name +
+          '\nEmail: ' +
+          email +
+          '\nOrganización: ' +
+          String(data.get('company') || '') +
+          '\nTeléfono: ' +
+          phone +
+          '\nCanal: ' +
+          String(data.get('preferredChannel') || '') +
+          '\nInterés: ' +
+          String(data.get('interest') || '') +
+          '\nTema: ' +
+          String(data.get('topic') || '') +
+          '\n\n' +
+          message;
+
+        fetch('/api/contact', { method: 'POST', body: data, redirect: 'manual' })
+          .then(function (res) {
+            if (res.status >= 200 && res.status < 400) {
+              var next = new URL(window.location.href);
+              next.searchParams.set('enviado', '1');
+              next.searchParams.delete('error');
+              window.location.href = next.toString();
+              return;
+            }
+            openMailto(body);
+          })
+          .catch(function () {
+            openMailto(body);
+          });
+      });
+
+      function openMailto(body) {
+        var href =
+          'mailto:' +
+          encodeURIComponent(supportEmail).replace(/%40/g, '@') +
+          '?subject=' +
+          encodeURIComponent(subject) +
+          '&body=' +
+          encodeURIComponent(body);
+        window.location.href = href;
+        window.setTimeout(function () {
+          show('contact-success');
+        }, 400);
+      }
+    })();
+  </script>
 </BaseLayout>

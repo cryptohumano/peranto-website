@@ -1,7 +1,8 @@
 ---
 import ContactPage from '../../components/ContactPage.astro';
 
-export const prerender = false;
+/** Prerender: peranto.app in production is GitHub Pages (static only). */
+export const prerender = true;
 ---
 
 <ContactPage lang="en" />
