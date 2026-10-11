@@ -115,6 +115,12 @@ export const ui = {
       'Bitácora del día: entradas, salidas y descarga, con la hora de Ciudad de México.',
     'research.projects.cigo.shot.conectar':
       'Sin llave en el equipo, el escritorio pide la extensión Aura para firmar.',
+    'research.projects.cigo.shot.inicio':
+      'Inicio en el teléfono: la identidad, el saldo y presentar el elector.',
+    'research.projects.cigo.shot.cartera':
+      'Cartera: membresías apiladas y la credencial de elector, con su fotografía.',
+    'research.projects.cigo.shot.votar':
+      'Votar: solo la convocatoria que la credencial cubre. Si no hay ninguna, la pantalla queda en blanco.',
     'research.projects.cigo.cta': 'Ver CiGo',
     'research.projects.criteria.title': 'CriterIA',
     'research.projects.criteria.desc':
@@ -510,6 +516,12 @@ export const ui = {
       'The day’s log: entries, exits, and download, in Mexico City time.',
     'research.projects.cigo.shot.conectar':
       'Without a key on the machine, the desk asks for the Aura extension to sign.',
+    'research.projects.cigo.shot.inicio':
+      'Home on the phone: identity, balance, and presenting the elector credential.',
+    'research.projects.cigo.shot.cartera':
+      'Wallet: stacked memberships and the elector credential, with its photo.',
+    'research.projects.cigo.shot.votar':
+      'Vote: only a call the credential covers. With none open, the screen stays empty.',
     'research.projects.cigo.cta': 'See CiGo',
     'research.projects.criteria.title': 'CriterIA',
     'research.projects.criteria.desc':
