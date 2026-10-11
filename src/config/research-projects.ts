@@ -27,16 +27,26 @@ const gh = (repo: string) => `https://github.com/cryptohumano/${repo}`;
 
 /** Proyectos públicos — ordenados dentro de cada grupo */
 export const researchProjects: ResearchProject[] = [
-  // Destacado — columna vertebral del ecosistema
+  {
+    id: 'cigo',
+    group: 'governance',
+    status: 'live',
+    featured: true,
+    href: 'https://cigo.peranto.app',
+    githubHref: gh('peranto-protocol'),
+    defaultOpen: true,
+    titleKey: 'research.projects.cigo.title',
+    descKey: 'research.projects.cigo.desc',
+  },
   {
     id: 'peranto-protocol',
     group: 'identity',
     status: 'poc',
-    featured: true,
+    showcase: true,
     href: 'https://cryptohumano.github.io/peranto-protocol/#/login',
     githubHref: gh('peranto-protocol'),
     ghostTag: 'peranto-protocol',
-    defaultOpen: true,
+    defaultOpen: false,
     titleKey: 'research.projects.peranto-protocol.title',
     descKey: 'research.projects.peranto-protocol.desc',
   },
@@ -80,9 +90,9 @@ export const researchProjects: ResearchProject[] = [
   {
     id: 'aura',
     group: 'identity',
-    status: 'experiment',
-    href: gh('aura-pwa'),
-    githubHref: gh('aura-pwa'),
+    status: 'live',
+    href: 'https://peranto.app/aura/',
+    githubHref: gh('peranto-aura-extension'),
     ghostTag: 'aura',
     titleKey: 'research.projects.aura.title',
     descKey: 'research.projects.aura.desc',

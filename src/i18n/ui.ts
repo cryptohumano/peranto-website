@@ -9,9 +9,9 @@ export const defaultLang: Lang = 'es';
 
 export const ui = {
   es: {
-    'meta.title': 'Peranto — Soberanía digital con propósito',
+    'meta.title': 'Peranto — CiGo, ciudadanía y gobierno',
     'meta.description':
-      'Peranto Protocol: identidad digital autosoberana, credenciales verificables y economía DisCO. Software abierto (CriterIA, Lumo, Aura) con valor que recircula — no renta extractiva.',
+      'CiGo lleva la identidad de una organización al teléfono: credenciales, puertas y votaciones. Aura, la extensión del navegador, firma. Peranto es el protocolo abierto detrás.',
     'nav.thesis': 'Tesis',
     'nav.pillars': 'Pilares',
     'nav.research': 'Investigación',
@@ -20,10 +20,12 @@ export const ui = {
     'nav.collaborate': 'Colaborar',
     'nav.lab': 'Laboratorio',
     'nav.github': 'GitHub',
-    'hero.eyebrow': 'Identidad · Infraestructura · Gobernanza',
-    'hero.title': 'Soberanía digital con propósito.',
+    'hero.eyebrow': 'CiGo · Ciudadanía y Gobierno',
+    'hero.title': 'La identidad de tu organización, en el teléfono.',
     'hero.subtitle':
-      'Peranto investiga y construye identidad autosoberana, infraestructura y tokenomías que devuelven el control a las personas — sin renunciar al rigor ni a modelos sostenibles.',
+      'CiGo emite credenciales, abre puertas y convoca votaciones para universidades, condominios, sindicatos y cooperativas. La persona guarda la identidad. Aura, la extensión del navegador, firma lo que la organización emite.',
+    'hero.cta.cigo': 'Conocer CiGo',
+    'hero.cta.aura': 'Aura, la extensión',
     'hero.cta.lab': 'Explorar el laboratorio',
     'hero.cta.criteria': 'Probar CriterIA',
     'hero.cta.github': 'Trabajo abierto',
@@ -59,7 +61,7 @@ export const ui = {
     'research.label': 'Práctica',
     'research.title': 'Investigación desplegada',
     'research.intro':
-      'El núcleo es Peranto Protocol: identidad autosoberana, credenciales verificables y nodos DisCO que recirculan valor. Alrededor, software en producción y experimentos que puedes auditar o autohospedar — sin capturar tus datos.',
+      'Lo que está en uso es CiGo: credenciales, puerta y votación para una organización. Aura, la extensión del navegador, firma sin dejar la llave en el servidor. Detrás sigue Peranto Protocol, la identidad y la economía DisCO que puedes auditar.',
     'research.solidarity':
       'No aspiramos a competir con gigantes de mercado a escala global. Publicamos infraestructura para que comunidades desplieguen alternativas — identidad, movilidad, voto, coordinación — en el marco del boycot, desinversión y sanciones (BDS) y la economía solidaria activa: pilotos locales, código abierto, escalabilidad comunitaria.',
     'research.groups.solidarity': 'Economía solidaria comunitaria',
@@ -90,6 +92,30 @@ export const ui = {
     'research.projects.lab': 'Laboratorio',
     'research.panel.expand': 'Ver detalles de {project}',
     'research.panel.collapse': 'Ocultar detalles de {project}',
+    'research.projects.cigo.title': 'CiGo',
+    'research.projects.cigo.desc':
+      'Ciudadanía y gobierno para una organización: credenciales en el teléfono, puerta con NFC o QR, y votaciones que cada persona ve solo si su credencial las cubre.',
+    'research.projects.cigo.who':
+      'Hecho para universidades privadas, condominios, sindicatos y cooperativas. La organización emite. La persona guarda la identidad. En la red queda el ancla, no el expediente.',
+    'research.projects.cigo.aura':
+      'Aura es la extensión de navegador que firma. El escritorio no guarda una llave de cadena: pide «Conectar Aura» y esa identidad emite, ancla y revoca.',
+    'research.projects.cigo.gallery.label': 'El escritorio de CiGo',
+    'research.projects.cigo.gallery.expand': 'Ampliar captura',
+    'research.projects.cigo.gallery.dialog': 'Vista ampliada de CiGo',
+    'research.projects.cigo.gallery.close': 'Cerrar',
+    'research.projects.cigo.gallery.prev': 'Anterior',
+    'research.projects.cigo.gallery.next': 'Siguiente',
+    'research.projects.cigo.shot.emitir':
+      'Emitir: tipo de credencial, datos, fotografía y el código que la persona lee con la app.',
+    'research.projects.cigo.shot.puesto':
+      'Puesto de acceso: el código de reto queda activo para QR o para el lector NFC.',
+    'research.projects.cigo.shot.convocar':
+      'Convocar: cívica, de la cooperativa o una pregunta general, con alcance y plazo.',
+    'research.projects.cigo.shot.accesos':
+      'Bitácora del día: entradas, salidas y descarga, con la hora de Ciudad de México.',
+    'research.projects.cigo.shot.conectar':
+      'Sin llave en el equipo, el escritorio pide la extensión Aura para firmar.',
+    'research.projects.cigo.cta': 'Ver CiGo',
     'research.projects.criteria.title': 'CriterIA',
     'research.projects.criteria.desc':
       'Redacción legal y académica asistida por IA con procedencia verificable: editor colaborativo, agente LLM, firma C2PA e identidad Polkadot/Substrate. Datos en tu dispositivo; código bajo FSL-1.1-MIT.',
@@ -207,13 +233,13 @@ export const ui = {
       'KILT sigue siendo el mejor referente de identidad digital que conocemos; el equipo cerró el proyecto. AuraDID conserva esa arquitectura en código abierto para no depender de un proveedor único ni perder el modelo de DIDs y credenciales on-chain.',
     'research.projects.auradid.path':
       'Sigue siendo Substrate: puede desplegarse como solochain y conectarse a Polkadot para pagos en el relay. Refactorizar el runtime heredado es costoso; la vía más viable a medio plazo es migrar la lógica de identidad a contratos inteligentes en EVM.',
-    'research.projects.aura.title': 'Aura Wallet',
+    'research.projects.aura.title': 'Aura',
     'research.projects.aura.desc':
-      'PWA base del ecosistema: el usuario es dueño de sus datos — cuentas, firmas y conexión a Polkadot, Kusama y PVM (EVM completa en Polkadot, interoperable con Ethereum).',
+      'Extensión de navegador que firma por CiGo. La organización no deja la llave en el servidor: Aura desbloquea la identidad en Chrome, Edge, Brave o Firefox y aprueba cada emisión.',
     'research.projects.aura.base':
-      'Generación de cuentas, firma criptográfica en el dispositivo (WebAuthn, cifrado local) y operación multi-cadena con Dedot. De esta base derivan Andino Wallet y Emergency Wallet.',
+      'Crea el DID did:peranto, guarda el vault cifrado en el navegador y responde al escritorio cuando pide «Conectar Aura». También guarda credenciales verificables.',
     'research.projects.aura.chains':
-      'Conecta al relay de Polkadot, a Kusama y a la PVM: una EVM nativa en el ecosistema Polkadot que mantiene interoperabilidad con Ethereum sin abandonar Substrate.',
+      'Firma en Polkadot (PVM) y en EVM. De esta misma línea de posesión de claves salieron Andino Wallet y Emergency Wallet.',
     'research.projects.andino.title': 'Andino Wallet',
     'research.projects.andino.desc':
       'Bitácora GPS firmada para andinismo: evidencia verificable de cumbres ante la FEACH, sin apps cerradas de rescate comercial.',
@@ -378,9 +404,9 @@ export const ui = {
     'lang.switch': 'EN',
   },
   en: {
-    'meta.title': 'Peranto — Digital sovereignty, on purpose',
+    'meta.title': 'Peranto — CiGo, citizenship and government',
     'meta.description':
-      'Peranto Protocol: self-sovereign digital identity, verifiable credentials, and DisCO economics. Open software (CriterIA, Lumo, Aura) with value that recirculates — not extractive rent.',
+      'CiGo puts an organization’s identity on the phone: credentials, doors, and votes. Aura, the browser extension, signs. Peranto is the open protocol underneath.',
     'nav.thesis': 'Thesis',
     'nav.pillars': 'Pillars',
     'nav.research': 'Research',
@@ -389,10 +415,12 @@ export const ui = {
     'nav.collaborate': 'Collaborate',
     'nav.lab': 'Lab',
     'nav.github': 'GitHub',
-    'hero.eyebrow': 'Identity · Infrastructure · Governance',
-    'hero.title': 'Digital sovereignty, on purpose.',
+    'hero.eyebrow': 'CiGo · Citizenship and government',
+    'hero.title': 'Your organization’s identity, on the phone.',
     'hero.subtitle':
-      'Peranto researches and builds self-sovereign identity, infrastructure, and tokenomics that return control to people — without trading rigor for sustainability.',
+      'CiGo issues credentials, opens doors, and calls votes for universities, condominiums, unions, and cooperatives. The person holds the identity. Aura, the browser extension, signs what the organization issues.',
+    'hero.cta.cigo': 'See CiGo',
+    'hero.cta.aura': 'Aura, the extension',
     'hero.cta.lab': 'Explore the lab',
     'hero.cta.criteria': 'Try CriterIA',
     'hero.cta.github': 'Open work',
@@ -428,7 +456,7 @@ export const ui = {
     'research.label': 'Practice',
     'research.title': 'Deployed research',
     'research.intro':
-      'The spine is Peranto Protocol: self-sovereign identity, verifiable credentials, and DisCO nodes that recirculate value. Around it, production software and experiments you can audit or self-host — without capturing your data.',
+      'What is in use is CiGo: credentials, door, and voting for an organization. Aura, the browser extension, signs without leaving the key on the server. Underneath is still Peranto Protocol, the identity and DisCO economy you can audit.',
     'research.solidarity':
       'We are not trying to outscale global market giants. We publish infrastructure so communities can deploy alternatives — identity, mobility, voting, coordination — within boycott, divestment, and sanctions (BDS) and active solidarity economies: local pilots, open source, community-scale growth.',
     'research.groups.solidarity': 'Community solidarity economy',
@@ -459,6 +487,30 @@ export const ui = {
     'research.projects.lab': 'Lab',
     'research.panel.expand': 'Show {project} details',
     'research.panel.collapse': 'Hide {project} details',
+    'research.projects.cigo.title': 'CiGo',
+    'research.projects.cigo.desc':
+      'Citizenship and government for one organization: credentials on the phone, a door with NFC or QR, and votes each person sees only when their credential covers them.',
+    'research.projects.cigo.who':
+      'Built for private universities, condominiums, unions, and cooperatives. The organization issues. The person holds the identity. The network keeps the anchor, not the file.',
+    'research.projects.cigo.aura':
+      'Aura is the browser extension that signs. The desk does not keep a chain key: it asks to connect Aura, and that identity issues, anchors, and revokes.',
+    'research.projects.cigo.gallery.label': 'The CiGo desk',
+    'research.projects.cigo.gallery.expand': 'Enlarge screenshot',
+    'research.projects.cigo.gallery.dialog': 'Enlarged CiGo view',
+    'research.projects.cigo.gallery.close': 'Close',
+    'research.projects.cigo.gallery.prev': 'Previous',
+    'research.projects.cigo.gallery.next': 'Next',
+    'research.projects.cigo.shot.emitir':
+      'Issue: credential type, details, photo, and the code the person reads with the app.',
+    'research.projects.cigo.shot.puesto':
+      'Door desk: the challenge code stays up for QR or the NFC reader.',
+    'research.projects.cigo.shot.convocar':
+      'Call a vote: civic, cooperative, or a general question, with scope and deadline.',
+    'research.projects.cigo.shot.accesos':
+      'The day’s log: entries, exits, and download, in Mexico City time.',
+    'research.projects.cigo.shot.conectar':
+      'Without a key on the machine, the desk asks for the Aura extension to sign.',
+    'research.projects.cigo.cta': 'See CiGo',
     'research.projects.criteria.title': 'CriterIA',
     'research.projects.criteria.desc':
       'AI-assisted legal and academic writing with verifiable provenance: collaborative editor, LLM agent, C2PA signing, and Polkadot/Substrate identity. Data on your device; code under FSL-1.1-MIT.',
@@ -576,13 +628,13 @@ export const ui = {
       'KILT remains the best digital-identity reference we know; the team shut the project down. AuraDID keeps that architecture as open source so we are not locked to one vendor or the on-chain DID and credential model.',
     'research.projects.auradid.path':
       'Still Substrate: it can run as a solochain and connect to Polkadot for relay payments. Refactoring the inherited runtime is expensive; the most viable medium-term path is migrating identity logic to EVM smart contracts.',
-    'research.projects.aura.title': 'Aura Wallet',
+    'research.projects.aura.title': 'Aura',
     'research.projects.aura.desc':
-      'Ecosystem base PWA: users own their data — accounts, signing, and connections to Polkadot, Kusama, and PVM (full EVM on Polkadot, Ethereum-interoperable).',
+      'Browser extension that signs for CiGo. The organization does not leave the key on the server: Aura unlocks the identity in Chrome, Edge, Brave, or Firefox and approves each issuance.',
     'research.projects.aura.base':
-      'Account generation, on-device cryptographic signing (WebAuthn, local encryption), and multi-chain operation with Dedot. Andino Wallet and Emergency Wallet build on this base.',
+      'It creates the did:peranto DID, keeps the encrypted vault in the browser, and answers the desk when it asks to connect Aura. It also stores verifiable credentials.',
     'research.projects.aura.chains':
-      'Connects to the Polkadot relay, Kusama, and PVM: a native EVM in the Polkadot ecosystem that stays interoperable with Ethereum without leaving Substrate.',
+      'It signs on Polkadot (PVM) and on EVM. Andino Wallet and Emergency Wallet come from this same key-possession line.',
     'research.projects.andino.title': 'Andino Wallet',
     'research.projects.andino.desc':
       'Signed GPS logbook for mountaineering: verifiable summit evidence for FEACH, without closed commercial rescue apps.',

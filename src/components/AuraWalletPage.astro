@@ -86,8 +86,8 @@ const features = isEs
           <p class="mt-4 max-w-xl text-lg text-ink-muted">
             {
               isEs
-                ? 'Guarda credenciales verificables, compártelas por partes y firma en Polkadot (PVM) y EVM. Las claves no salen de tu dispositivo.'
-                : 'Store verifiable credentials, share them selectively, and sign on Polkadot (PVM) and EVM. Keys never leave your device.'
+                ? 'Es la extensión que firma en CiGo: el escritorio pide conectar Aura y la llave no queda en el servidor. También guarda credenciales y firma en Polkadot (PVM) y EVM.'
+                : 'This is the extension that signs in CiGo: the desk asks to connect Aura and the key never stays on the server. It also stores credentials and signs on Polkadot (PVM) and EVM.'
             }
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
@@ -110,6 +110,11 @@ const features = isEs
                 ? 'Extensión para Chrome, Edge, Brave y Firefox. Pronto en las tiendas oficiales.'
                 : 'Extension for Chrome, Edge, Brave and Firefox. Coming soon to official stores.'
             }
+          </p>
+          <p class="mt-2 text-sm">
+            <a href="https://cigo.peranto.app" class="font-medium text-deep underline-offset-2 hover:underline">
+              {isEs ? 'Ver CiGo, donde Aura firma' : 'See CiGo, where Aura signs'}
+            </a>
           </p>
         </div>
         <div class="overflow-hidden rounded-2xl border border-line bg-night shadow-xl">

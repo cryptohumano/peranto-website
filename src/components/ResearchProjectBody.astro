@@ -4,6 +4,7 @@ import ProjectDemoLink from './ProjectDemoLink.astro';
 import ProjectGallery from './ProjectGallery.astro';
 import type { Lang } from '../i18n/ui';
 import { useTranslations } from '../i18n/ui';
+import { cigoScreenshots } from '../config/cigo-screenshots';
 import { criteriaFeatureKeys } from '../config/criteria-features';
 import { andinoScreenshots } from '../config/andino-screenshots';
 import { emergencyScreenshots } from '../config/emergency-screenshots';
@@ -39,6 +40,53 @@ function projectHref() {
   return project.githubHref ?? project.href;
 }
 ---
+
+{
+  project.id === 'cigo' && (
+    <>
+      <p class="project-panel__lead">{t(project.descKey)}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">{t('research.projects.cigo.who')}</p>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">{t('research.projects.cigo.aura')}</p>
+
+      <ProjectGallery
+        lang={lang}
+        galleryId="cigo"
+        screenshots={cigoScreenshots}
+        labelKey="research.projects.cigo.gallery.label"
+        dialogKey="research.projects.cigo.gallery.dialog"
+        expandKey="research.projects.cigo.gallery.expand"
+        closeKey="research.projects.cigo.gallery.close"
+        prevKey="research.projects.cigo.gallery.prev"
+        nextKey="research.projects.cigo.gallery.next"
+        class="mt-10"
+      />
+
+      <div class="project-panel__cta-row">
+        <a
+          href={project.href}
+          class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+          data-track-event="CTA CiGo"
+          data-track-placement="investigacion"
+          data-track-project="cigo"
+        >
+          {t('research.projects.cigo.cta')}
+        </a>
+        {
+          project.githubHref && (
+            <a
+              href={project.githubHref}
+              class="inline-flex items-center rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-deep/40 hover:bg-paper-dark/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('research.link.github')}
+            </a>
+          )
+        }
+      </div>
+    </>
+  )
+}
 
 {
   project.id === 'criteria' && (
@@ -628,7 +676,8 @@ function projectHref() {
 }
 
 {
-  project.id !== 'criteria' &&
+  project.id !== 'cigo' &&
+    project.id !== 'criteria' &&
     project.id !== 'lumo' &&
     project.id !== 'aura' &&
     project.id !== 'auradid' &&

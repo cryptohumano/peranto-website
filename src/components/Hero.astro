@@ -43,24 +43,20 @@ const t = useTranslations(lang);
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <a
-          href={siteConfig.ghostUrl}
+          href="https://cigo.peranto.app"
           class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-deep/20 transition hover:brightness-110"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-track-event="CTA Lab"
+          data-track-event="CTA CiGo"
           data-track-placement="hero"
         >
-          {t('hero.cta.lab')}
+          {t('hero.cta.cigo')}
         </a>
         <a
-          href="https://criteria.peranto.app"
+          href={`/${lang}/aura/`}
           class="inline-flex items-center rounded-md border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/50 hover:bg-white/5"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-track-event="CTA Criteria"
+          data-track-event="CTA Aura"
           data-track-placement="hero"
         >
-          {t('hero.cta.criteria')}
+          {t('hero.cta.aura')}
         </a>
         <a
           href={siteConfig.githubOrg}
