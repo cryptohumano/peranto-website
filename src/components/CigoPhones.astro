@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n/ui';
+import inicio from '../assets/cigo/inicio.png';
+import cartera from '../assets/cigo/cartera.png';
+import votar from '../assets/cigo/votar.png';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const shots = [
+  {
+    src: inicio,
+    title: es ? 'Inicio' : 'Home',
+    text: es
+      ? 'Identidad de demostración, saldo y el elector listo para presentar.'
+      : 'Demo identity, balance, and the elector credential ready to present.',
+  },
+  {
+    src: cartera,
+    title: es ? 'Cartera' : 'Wallet',
+    text: es
+      ? 'Membresías y elector. El nombre y la fotografía de la captura son de demostración.'
+      : 'Memberships and elector. The name and photo in the capture are stand-ins.',
+  },
+  {
+    src: votar,
+    title: es ? 'Votar' : 'Vote',
+    text: es
+      ? 'Solo aparece la convocatoria que la credencial cubre.'
+      : 'Only a call the credential covers shows up here.',
+  },
+];
+---
+
+<section id="app" class="border-b border-line bg-night text-white">
+  <div class="section-width py-16 sm:py-20">
+    <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-bright/90">
+      {es ? 'La app' : 'The app'}
+    </p>
+    <h2 class="max-w-xl font-display text-3xl font-medium tracking-tight sm:text-4xl">
+      {es ? 'CiGo en el teléfono.' : 'CiGo on the phone.'}
+    </h2>
+    <p class="mt-4 max-w-2xl text-white/70">
+      {
+        es
+          ? 'Inicio, cartera y votación. El nombre, la dirección y las fotografías de estas capturas son de demostración.'
+          : 'Home, wallet, and voting. The name, address, and photos in these captures are stand-ins.'
+      }
+    </p>
+    <ul class="mt-10 flex gap-6 overflow-x-auto pb-2">
+      {
+        shots.map((shot) => (
+          <li class="w-[240px] shrink-0 sm:w-[260px]">
+            <Image
+              src={shot.src}
+              alt={shot.title}
+              class="w-full rounded-[28px] border border-white/10"
+              widths={[260, 520]}
+              sizes="260px"
+            />
+            <p class="mt-3 font-medium">{shot.title}</p>
+            <p class="mt-1 text-sm leading-relaxed text-white/65">{shot.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
