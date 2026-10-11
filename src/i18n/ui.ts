@@ -240,8 +240,10 @@ export const ui = {
     'research.projects.auradid.path':
       'Sigue siendo Substrate: puede desplegarse como solochain y conectarse a Polkadot para pagos en el relay. Refactorizar el runtime heredado es costoso; la vía más viable a medio plazo es migrar la lógica de identidad a contratos inteligentes en EVM.',
     'research.projects.aura.title': 'Aura',
+    'research.projects.aura.store': 'Instalar en Chrome',
+    'research.projects.aura.page': 'Ver la extensión',
     'research.projects.aura.desc':
-      'Extensión de navegador que firma por CiGo. La organización no deja la llave en el servidor: Aura desbloquea la identidad en Chrome, Edge, Brave o Firefox y aprueba cada emisión.',
+      'Extensión publicada en Chrome Web Store. Firma por CiGo: el escritorio pide conectar Aura y la llave no queda en el servidor. También guarda credenciales y firma en Polkadot y EVM.',
     'research.projects.aura.base':
       'Crea el DID did:peranto, guarda el vault cifrado en el navegador y responde al escritorio cuando pide «Conectar Aura». También guarda credenciales verificables.',
     'research.projects.aura.chains':
@@ -641,8 +643,10 @@ export const ui = {
     'research.projects.auradid.path':
       'Still Substrate: it can run as a solochain and connect to Polkadot for relay payments. Refactoring the inherited runtime is expensive; the most viable medium-term path is migrating identity logic to EVM smart contracts.',
     'research.projects.aura.title': 'Aura',
+    'research.projects.aura.store': 'Install on Chrome',
+    'research.projects.aura.page': 'See the extension',
     'research.projects.aura.desc':
-      'Browser extension that signs for CiGo. The organization does not leave the key on the server: Aura unlocks the identity in Chrome, Edge, Brave, or Firefox and approves each issuance.',
+      'Extension published on the Chrome Web Store. It signs for CiGo: the desk asks to connect Aura and the key never stays on the server. It also stores credentials and signs on Polkadot and EVM.',
     'research.projects.aura.base':
       'It creates the did:peranto DID, keeps the encrypted vault in the browser, and answers the desk when it asks to connect Aura. It also stores verifiable credentials.',
     'research.projects.aura.chains':

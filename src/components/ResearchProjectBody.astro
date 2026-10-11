@@ -266,18 +266,20 @@ function projectHref() {
       </p>
 
       <div class="project-panel__cta-row">
-        {
-          labUrl && (
-            <a
-              href={labUrl}
-              class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
-              target="_blank"
-              rel="noopener"
-            >
-              {t('research.projects.lab')}
-            </a>
-          )
-        }
+        <a
+          href="https://chromewebstore.google.com/detail/aura-wallet/jgjhbhonfpoalhlbnmgffdcpjfdggbhd"
+          class="inline-flex items-center rounded-md bg-gradient-to-r from-deep to-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-deep/15 transition hover:brightness-110"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('research.projects.aura.store')}
+        </a>
+        <a
+          href={`/${lang}/aura/`}
+          class="inline-flex items-center rounded-md border border-deep/30 bg-accent-soft/50 px-5 py-2.5 text-sm font-medium text-deep transition hover:border-deep/50"
+        >
+          {t('research.projects.aura.page')}
+        </a>
         {
           project.githubHref && (
             <a
